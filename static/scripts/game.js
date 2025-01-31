@@ -54,31 +54,26 @@ function create ()
     this.anims.create({
         key: 'left1',
         frames: this.anims.generateFrameNumbers('Chef1Atlas', { start: 99, end: 103 }),
-        frameRate: 7,
+        frameRate: 10,
         repeat: -1
     });
 
     this.anims.create({
-        key: 'turn1',
-        frames: [ { key: 'Chef1Atlas', frame: 4 } ],
-        frameRate: 20
-    });
-
-    this.anims.create({
         key: 'right1',
-        frames: this.anims.generateFrameNumbers('Chef1Atlas', { start: 5, end: 8 }),
+        frames: this.anims.generateFrameNumbers('Chef1Atlas', { start: 123, end: 126}),
         frameRate: 10,
         repeat: -1
     });
     this.anims.create({
         key: 'up1',
-        frames: this.anims.generateFrameNumbers('Chef2Atlas', { start: 0, end: 3 }),
+        frames: this.anims.generateFrameNumbers('Chef1Atlas', { start: 127, end: 132 }),
         frameRate: 10,
+        repeat: -1
         
     });
     this.anims.create({
         key: 'down1',
-        frames: this.anims.generateFrameNumbers('Chef1Atlas', { start: 5, end: 8 }),
+        frames: this.anims.generateFrameNumbers('Chef1Atlas', { start: 93, end: 98 }),
         frameRate: 10,
         repeat: -1
     });
@@ -89,12 +84,6 @@ function create ()
         frames: this.anims.generateFrameNumbers('Chef2Atlas', { start: 5, end: 8 }),
         frameRate: 10,
         repeat: -1
-    });
-
-    this.anims.create({
-        key: 'turn2',
-        frames: [ { key: 'Chef2Atlas', frame: 4 } ],
-        frameRate: 20
     });
 
     this.anims.create({
@@ -124,22 +113,30 @@ function update ()
     
     if (cursors.left.isDown)
     {
+        player.setVelocityY(0);
         player.setVelocityX(-75);
         player.anims.play('left1', true);
     }
     else if (cursors.right.isDown)
     {
-        console.log('right');
+        player.setVelocityY(0);
+        player.setVelocityX(75);
+        player.anims.play('right1', true);
     }
 
     else if (cursors.up.isDown)
     {
-        console.log('up');
+        player.setVelocityX(0);
+        player.setVelocityY(-75);
+        player.anims.play('up1', true);
     }
     else if (cursors.down.isDown)
     {
-        console.log('down');
+        player.setVelocityX(0);
+        player.setVelocityY(75);
+        player.anims.play('down1', true);
     }
+
 
     if(keyA.isDown){
         console.log('A');
