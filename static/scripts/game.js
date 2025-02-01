@@ -15,7 +15,10 @@ var config = {
     scene: {
         preload: preload,
         create: create,
-        update: update
+        update: update,
+        extend: {
+            interactwithCrate: interactwithCrate
+        }
     },
 };
 
@@ -191,8 +194,22 @@ function create ()
    // these two variables are used to keep track of the latest direction the players moved in (for animations / interactions)
     latestDirection1 = 'down';
     latestDirection2 = 'down';
+    this.input.keyboard.on('keydown-E', () => {
+        let distance = Phaser.Math.Distance.Between(player.x, player.y, onionCrate.x, onionCrate.y);
+        if(distance < 100){
+            this.interactwithCrate(player, onionCrate);
+        }
+        
+    });
+    
 }
-
+function interactwithCrate(player, crate){
+    if(!player.hasItem){
+        player.heldItem = 'onion';
+        this.add.image(player.x, player.y, 'onion');
+        player.hasItem = true;
+    }
+}
 
 function update ()
 {
