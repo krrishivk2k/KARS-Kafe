@@ -1,4 +1,4 @@
-export function createKitchenBoundaries(boundaries) {
+window.createKitchenBoundaries = function createKitchenBoundaries(boundaries) {
     boundaries.create(288,96,'boundary').refreshBody();
     boundaries.create(288,128,'boundary').refreshBody();
     boundaries.create(288,160,'boundary').refreshBody();
@@ -28,4 +28,19 @@ export function createKitchenBoundaries(boundaries) {
     boundaries.create(486,320,'boundary').refreshBody();
     boundaries.create(480,160,'boundary').refreshBody();
     boundaries.create(384,160,'boundary').refreshBody();
+}
+
+window.createFoodPantryBoundaries = function createFoodPantryBoundaries(boundaries) {
+    boundaries.create(544,320,'boundary').refreshBody();
+    boundaries.create(576,320,'boundary').refreshBody();
+    boundaries.create(672,352,'boundary').refreshBody();
+    boundaries.create(672,384,'boundary').refreshBody();
+    boundaries.create(549,480,'boundary').refreshBody();
+    boundaries.create(512,512,'boundary').refreshBody();
+    boundaries.create(480,512,'boundary').refreshBody();
+    boundaries.create(448,512,'boundary').refreshBody();
+    boundaries.create(416,512,'boundary').refreshBody();
+    boundaries.create(416,480,'boundary').refreshBody();
+    boundaries.create(384,416,'boundary').refreshBody();
+    boundaries.create(384,384,'boundary').refreshBody();
 }

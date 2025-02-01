@@ -37,6 +37,8 @@ function preload ()
     this.load.spritesheet('Chef2Atlas', 'static/characters/Chef2Atlas.png',{ frameWidth: 34, frameHeight: 68 });
     this.load.image('on_top', 'static/map/on_top.png');
 
+    
+
     //Player 2 Keys
     let keyA;
     let keyD;
@@ -53,6 +55,8 @@ function preload ()
 
 function create ()
 {
+    
+
     boundaries = this.physics.add.staticGroup();
     interactionsK = this.physics.add.staticGroup();
     interactionsP = this.physics.add.staticGroup();
@@ -61,37 +65,7 @@ function create ()
 
     
     //Creating Kitchen boundaries
-    // createKitchenBoundaries(boundaries);
-
-    boundaries.create(288,96,'boundary').refreshBody();
-    boundaries.create(288,128,'boundary').refreshBody();
-    boundaries.create(288,160,'boundary').refreshBody();
-    boundaries.create(288,192,'boundary').refreshBody();
-    boundaries.create(288,224,'boundary').refreshBody();
-    boundaries.create(288,256,'boundary').refreshBody();
-    boundaries.create(320,256,'boundary').refreshBody();
-    boundaries.create(352,256,'boundary').refreshBody();
-    boundaries.create(384,256,'boundary').refreshBody();
-    boundaries.create(486,256,'boundary').refreshBody();
-    boundaries.create(512,256,'boundary').refreshBody();
-    boundaries.create(544,256,'boundary').refreshBody();
-    boundaries.create(576,256,'boundary').refreshBody();
-    boundaries.create(576,224,'boundary').refreshBody();
-    boundaries.create(576,192,'boundary').refreshBody();
-    boundaries.create(576,160,'boundary').refreshBody();
-    boundaries.create(576,128,'boundary').refreshBody();
-    boundaries.create(576,96,'boundary').refreshBody();
-    boundaries.create(576,64,'boundary').refreshBody();
-    boundaries.create(576,32,'boundary').refreshBody();
-    boundaries.create(448,32,'boundary').refreshBody();
-    boundaries.create(416,32,'boundary').refreshBody();
-    boundaries.create(384,32,'boundary').refreshBody();
-    boundaries.create(352,32,'boundary').refreshBody();
-    boundaries.create(320,32,'boundary').refreshBody();
-    boundaries.create(486,288,'boundary').refreshBody();
-    boundaries.create(486,320,'boundary').refreshBody();
-    boundaries.create(480,160,'boundary').refreshBody();
-    boundaries.create(384,160,'boundary').refreshBody();
+    createKitchenBoundaries(boundaries);
 
     //Kithcen interactables
     //Rice cooker
@@ -113,18 +87,7 @@ function create ()
 
     //Creating food pantry boundaries 
     //boundaries.create(512,320,'boundary').refreshBody();
-    boundaries.create(544,320,'boundary').refreshBody();
-    boundaries.create(576,320,'boundary').refreshBody();
-    boundaries.create(672,352,'boundary').refreshBody();
-    boundaries.create(672,384,'boundary').refreshBody();
-    boundaries.create(549,480,'boundary').refreshBody();
-    boundaries.create(512,512,'boundary').refreshBody();
-    boundaries.create(480,512,'boundary').refreshBody();
-    boundaries.create(448,512,'boundary').refreshBody();
-    boundaries.create(416,512,'boundary').refreshBody();
-    boundaries.create(416,480,'boundary').refreshBody();
-    boundaries.create(384,416,'boundary').refreshBody();
-    boundaries.create(384,384,'boundary').refreshBody();
+    createFoodPantryBoundaries(boundaries);
 
     //Pantry interactables
     interactionsP.create(645,416,'interaction').refreshBody();
