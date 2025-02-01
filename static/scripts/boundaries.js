@@ -1,4 +1,5 @@
 window.createKitchenBoundaries = function createKitchenBoundaries(boundaries) {
+    boundaries.create(288,64,'boundary').refreshBody();
     boundaries.create(288,96,'boundary').refreshBody();
     boundaries.create(288,128,'boundary').refreshBody();
     boundaries.create(288,160,'boundary').refreshBody();
@@ -45,4 +46,5 @@ window.createFoodPantryBoundaries = function createFoodPantryBoundaries(boundari
     boundaries.create(416,480,'boundary').refreshBody();
     boundaries.create(384,416,'boundary').refreshBody();
     boundaries.create(384,384,'boundary').refreshBody();
+    boundaries.create(640,320,'boundary').refreshBody();
 }
