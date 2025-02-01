@@ -24,10 +24,11 @@ function preload ()
     
     this.load.image('blackwall', 'static/map/blackwall.png');
     this.load.image('floor', 'static/map/floor.png');
-    this.load.image('wall', 'static/map/wall.png');
-    this.load.tilemapTiledJSON('wallCollider', 'static/map/wallscollide.tsj');
     this.load.image('furnitures', 'static/map/furnitures.png');
     this.load.image('behind_player', 'static/map/behind_player.png');
+    this.load.image('wall', 'static/map/wall.png');
+    this.load.image('boundary', 'static/map/tile.png');
+    this.load.tilemapTiledJSON('wallCollider', 'static/map/wallscollide.JSON');
     this.load.spritesheet('Chef1Atlas', 'static/characters/Chef1Atlas.png',{ frameWidth: 34, frameHeight: 68 });
     this.load.spritesheet('Chef2Atlas', 'static/characters/Chef2Atlas.png',{ frameWidth: 34, frameHeight: 68 });
     this.load.image('on_top', 'static/map/on_top.png');
@@ -45,11 +46,14 @@ function preload ()
 
 function create ()
 {
-    platforms = this.physics.add.staticGroup();
+    boundaries = this.physics.add.staticGroup();
+    
+    
+
     this.add.image(500, 300, 'blackwall');
     this.add.image(500, 300, 'floor');
-    platforms.create(500, 300, 'wall').refreshBody();
-    platforms.create(500, 300, 'furnitures').refreshBody().setImmovable(true);
+    this.add.image(500, 300, 'wall');
+    this.add.image(500, 300, 'furnitures');
     this.add.image(500, 300, 'behind_player');
 
     cursors = this.input.keyboard.createCursorKeys();
@@ -60,15 +64,24 @@ function create ()
 
     player = this.physics.add.sprite(450, 350, 'Chef1Atlas');
     player2 = this.physics.add.sprite(350, 350, 'Chef2Atlas');
-
     
     player.setCollideWorldBounds(true);
-    this.physics.add.collider(player, platforms);
 
     this.add.image(500, 300, 'on_top');
 
+    //Creating boundaries
+    boundaries.create(288,64,'boundary').refreshBody();
+    boundaries.create(288,96,'boundary').refreshBody();
+    boundaries.create(288,128,'boundary').refreshBody();
+    boundaries.create(288,160,'boundary').refreshBody();
+    boundaries.create(288,224,'boundary').refreshBody();
+    boundaries.create(288,256,'boundary').refreshBody();
+    boundaries.create(320,256,'boundary').refreshBody();
+    boundaries.create(352,256,'boundary').refreshBody();
+    boundaries.create(384,256,'boundary').refreshBody();
+
     //chef1 animation
-    this.anims.create({
+    this.anims.create({ 
         key: 'left1',
         frames: this.anims.generateFrameNumbers('Chef1Atlas', { start: 99, end: 103 }),
         frameRate: 10,
@@ -122,7 +135,7 @@ function create ()
         frameRate: 10,
         repeat: -1
     });
-    
+    this.physics.add.collider(player, boundaries);
 }
 
 function update ()
