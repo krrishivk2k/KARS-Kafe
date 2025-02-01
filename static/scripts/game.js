@@ -106,9 +106,8 @@ function create ()
     meatStorage = this.physics.add.staticSprite(512,320,'interaction'); //Meat
     
     fish1 = this.physics.add.staticSprite(608,320,'interaction'); //Fish
-    fish2 = this.physics.add.staticSprite(608,320,'interaction');
-    fish3 = this.physics.add.staticSprite(608,320,'interaction');
-    fish4 = this.physics.add.staticSprite(640,320,'interaction');
+    fish2 = this.physics.add.staticSprite(672,320,'interaction');
+    fish3 = this.physics.add.staticSprite(640,320,'interaction');
 
     this.add.image(500, 300, 'floor');
     this.add.image(500, 300, 'wall');
@@ -196,7 +195,7 @@ function create ()
     latestDirection2 = 'down';
     this.input.keyboard.on('keydown-E', () => {
         let distance = Phaser.Math.Distance.Between(player.x, player.y, onionCrate.x, onionCrate.y);
-        if(distance < 100){
+        if (distance < 100) {
             this.interactwithCrate(player, onionCrate);
         }
         
