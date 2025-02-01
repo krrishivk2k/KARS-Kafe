@@ -22,9 +22,15 @@ var game = new Phaser.Game(config);
 function preload ()
 {
     
-    this.load.image('sky', 'static/sky.png');
+    this.load.image('blackwall', 'static/map/blackwall.png');
+    this.load.image('floor', 'static/map/floor.png');
+    this.load.image('wall', 'static/map/wall.png');
+    this.load.tilemapTiledJSON('wallCollider', 'static/map/wallscollide.tsj');
+    this.load.image('furnitures', 'static/map/furnitures.png');
+    this.load.image('behind_player', 'static/map/behind_player.png');
     this.load.spritesheet('Chef1Atlas', 'static/characters/Chef1Atlas.png',{ frameWidth: 34, frameHeight: 68 });
     this.load.spritesheet('Chef2Atlas', 'static/characters/Chef2Atlas.png',{ frameWidth: 34, frameHeight: 68 });
+    this.load.image('on_top', 'static/map/on_top.png');
 
     let keyA;
     let keyD;
@@ -39,7 +45,12 @@ function preload ()
 
 function create ()
 {
-    this.add.image(400, 300, 'sky');
+    platforms = this.physics.add.staticGroup();
+    this.add.image(500, 300, 'blackwall');
+    this.add.image(500, 300, 'floor');
+    platforms.create(500, 300, 'wall').refreshBody();
+    platforms.create(500, 300, 'furnitures').refreshBody().setImmovable(true);
+    this.add.image(500, 300, 'behind_player');
 
     cursors = this.input.keyboard.createCursorKeys();
     keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
@@ -47,8 +58,14 @@ function create ()
     keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
     keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
 
-    player = this.physics.add.sprite(400, 300, 'Chef1Atlas');
-    player2 = this.physics.add.sprite(200, 300, 'Chef2Atlas');
+    player = this.physics.add.sprite(450, 350, 'Chef1Atlas');
+    player2 = this.physics.add.sprite(350, 350, 'Chef2Atlas');
+
+    
+    player.setCollideWorldBounds(true);
+    this.physics.add.collider(player, platforms);
+
+    this.add.image(500, 300, 'on_top');
 
     //chef1 animation
     this.anims.create({
@@ -112,29 +129,35 @@ function update ()
 {
     
     if (cursors.left.isDown)
+        {
+            player.setVelocityY(0);
+            player.setVelocityX(-75);
+            player.anims.play('left1', true);
+        }
+        else if (cursors.right.isDown)
+        {
+            player.setVelocityY(0);
+            player.setVelocityX(75);
+            player.anims.play('right1', true);
+        }
+    
+        else if (cursors.up.isDown)
+        {
+            player.setVelocityX(0);
+            player.setVelocityY(-75);
+            player.anims.play('up1', true);
+        }
+        else if (cursors.down.isDown)
+        {
+            player.setVelocityX(0);
+            player.setVelocityY(75);
+            player.anims.play('down1', true);
+        }
+    
     {
         player.setVelocityY(0);
         player.setVelocityX(-75);
         player.anims.play('left1', true);
-    }
-    else if (cursors.right.isDown)
-    {
-        player.setVelocityY(0);
-        player.setVelocityX(75);
-        player.anims.play('right1', true);
-    }
-
-    else if (cursors.up.isDown)
-    {
-        player.setVelocityX(0);
-        player.setVelocityY(-75);
-        player.anims.play('up1', true);
-    }
-    else if (cursors.down.isDown)
-    {
-        player.setVelocityX(0);
-        player.setVelocityY(75);
-        player.anims.play('down1', true);
     }
 
 
