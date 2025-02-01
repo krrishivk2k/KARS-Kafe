@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barrio&family=Rubik+Puddles&display=swap" rel="stylesheet">
+
+    <link href="{{url_for('static', filename='/styles/menu.css')}}" rel="stylesheet" type="text/css" ></link>
+    <title>KARS Kafe</title>
+    
+</head>
+<body>
+
+    <img src="{{url_for('static', filename='/frontpage assets/mainArt.png')}}" alt="front" class="bg">\
+
+    <img src="{{url_for('static', filename='/frontpage assets/Titleboard.png')}}" alt="title board" class="title">\
+    <h1 class="gameName">KARS Kafe</h1>
+    <form>
+        <div class="start">
+            
+            <button class="startButton" type="submit" formaction="{{url_for('index')}}" >Play</button>
+        </div>
+    </form>
+
+
+    <a class="attribution" href="https://lovepik.com/images/png-texture.html">Texture Png vectors by Lovepik.com</a>
+
+</body>
+</html>
