@@ -153,13 +153,6 @@ function update ()
             player.setVelocityY(75);
             player.anims.play('down1', true);
         }
-    
-    {
-        player.setVelocityY(0);
-        player.setVelocityX(-75);
-        player.anims.play('left1', true);
-    }
-
 
     if(keyA.isDown){
         console.log('A');
