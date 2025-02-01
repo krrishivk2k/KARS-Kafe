@@ -187,94 +187,94 @@ function create ()
     //Colliders for pickle crates
     this.physics.add.collider(player, pickleCrate);
     this.physics.add.collider(player2, pickleCrate);
+    
+   // these two variables are used to keep track of the latest direction the players moved in (for animations / interactions)
+    latestDirection1 = 'down';
+    latestDirection2 = 'down';
 }
+
 
 function update ()
 {
-       // player1 movement
-    cursors.left.on('down', function(event){
+    // player1 movement
+    var cursorKeys = this.input.keyboard.createCursorKeys();
+
+    if (cursorKeys.left.isDown) {
         player.setVelocityX(-75);
         player.setVelocityY(0);
         player.anims.play('left1', true);
-    });
-    cursors.left.on('up', function(event){
-        player.setVelocityX(0);
-        player.setVelocityY(0);
-        player.anims.play('faceLeft1', true);
-    });
-    cursors.down.on('down', function(event){
-        player.setVelocityX(0);
-        player.setVelocityY(75);
-        player.anims.play('down1', true);
-    });
-    cursors.down.on('up', function(event){
-        player.setVelocityX(0);
-        player.setVelocityY(0);
-        player.anims.play('faceDown1', true);
-    });
-    cursors.right.on('down', function(event){
+
+        latestDirection1 = 'left';
+    }
+    else if (cursorKeys.right.isDown) {
         player.setVelocityX(75);
         player.setVelocityY(0);
         player.anims.play('right1', true);
-    });
-    cursors.right.on('up', function(event){
-        player.setVelocityX(0);
-        player.setVelocityY(0);
-        player.anims.play('faceRight1', true);
-    });
-    cursors.up.on('down', function(event){
-        player.setVelocityX(0);
+
+        latestDirection1 = 'right';
+    }
+    else if (cursorKeys.up.isDown) {
         player.setVelocityY(-75);
+        player.setVelocityX(0);
         player.anims.play('up1', true);
-    });
-    cursors.up.on('up', function(event){
+
+        latestDirection1 = 'up';
+    }
+    else if (cursorKeys.down.isDown) {
+        player.setVelocityY(75);
+        player.setVelocityX(0);
+        player.anims.play('down1', true);
+
+        latestDirection1 = 'down';
+    }
+    else {
         player.setVelocityX(0);
         player.setVelocityY(0);
-        player.anims.play('faceUp1', true);
-    });
+        if (latestDirection1 == 'left') player.anims.play('faceLeft1', true);
+        else if (latestDirection1 == 'right') player.anims.play('faceRight1', true);
+        else if (latestDirection1 == 'up') player.anims.play('faceUp1', true);
+        else if (latestDirection1 == 'down') player.anims.play('faceDown1', true);
+    }
+
+
 
     // player2 movement
-    keyA.on('down', function(event){
+    if (keyA.isDown) {
         player2.setVelocityX(-75);
         player2.setVelocityY(0);
         player2.anims.play('left2', true);
-    });
-    keyA.on('up', function(event){
-        player2.setVelocityX(0);
-        player2.setVelocityY(0);
-        player2.anims.play('faceLeft2', true);
-    });
-    keyS.on('down', function(event){
-        player2.setVelocityY(75);
-        player2.setVelocityX(0);
-        player2.anims.play('down2', true);
-    });
-    keyS.on('up', function(event){
-        player2.setVelocityX(0);
-        player2.setVelocityY(0);
-        player2.anims.play('faceDown2', true);
-    });
-    keyD.on('down', function(event){
+
+        latestDirection2 = 'left';
+    }
+    else if (keyD.isDown) {
         player2.setVelocityX(75);
         player2.setVelocityY(0);
         player2.anims.play('right2', true);
-    });    
-    keyD.on('up', function(event){
-        player2.setVelocityX(0);
-        player2.setVelocityY(0);
-        player2.anims.play('faceRight2', true);
-    });
-    keyW.on('down', function(event){
+
+        latestDirection2 = 'right';
+    }
+    else if (keyW.isDown) {
         player2.setVelocityY(-75);
         player2.setVelocityX(0);
         player2.anims.play('up2', true);
-    });
-    keyW.on('up', function(event){
+
+        latestDirection2 = 'up';
+    }
+    else if (keyS.isDown) {
+        player2.setVelocityY(75);
+        player2.setVelocityX(0);
+        player2.anims.play('down2', true);
+
+        latestDirection2 = 'down';
+    }
+    else {
         player2.setVelocityX(0);
         player2.setVelocityY(0);
-       
-
-     player2.anims.play('faceUp2', true);
-    });
+        if (latestDirection2 == 'left') player2.anims.play('faceLeft2', true);
+        else if (latestDirection2 == 'right') player2.anims.play('faceRight2', true);
+        else if (latestDirection2 == 'up') player2.anims.play('faceUp2', true);
+        else if (latestDirection2 == 'down') player2.anims.play('faceDown2', true);
+    }
+    
         
 }
