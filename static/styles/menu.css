@@ -1,0 +1,52 @@
+
+.bg {
+    width: 100%;
+    height: 100%;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.start{
+    text-align: center;
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.startButton {
+    background-image: url("../Sign.png") no-repeat top left;
+    border: 2px solid black;
+    color: blue;
+    font-weight: bolder;
+    
+    width: 15rem;
+    height: 5rem; 
+    font-size: 42px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.gameName {
+    font-family: "Rubik Puddles", serif;
+    font-weight: bolder;
+    font-style: normal;
+    font-size: 100px;
+
+    color: #ffffff;
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.title {
+    position: absolute;
+    width: 45%;
+    top: 9.4%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
