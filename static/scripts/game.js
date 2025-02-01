@@ -37,7 +37,10 @@ function preload ()
     this.load.spritesheet('Chef2Atlas', 'static/characters/Chef2Atlas.png',{ frameWidth: 34, frameHeight: 68 });
     this.load.image('on_top', 'static/map/on_top.png');
 
-    
+    //Loading the food
+    this.load.image('onion', 'static/food/onion.png');
+    this.load.image('tomato', 'static/food/tomato.png');
+    this.load.image('pickle', 'static/food/pickle.png');
 
     //Player 2 Keys
     let keyA;
@@ -92,7 +95,6 @@ function create ()
 
     //Pantry interactables
     
-    //interactionsP.create(645,448,'interaction').refreshBody();
     onionCrate = this.physics.add.staticSprite(613,448,'interaction'); //Onion
     tomatoCrate = this.physics.add.staticSprite(581,448,'interaction'); //Tomato
     
@@ -103,6 +105,7 @@ function create ()
     fish1 = this.physics.add.staticSprite(608,320,'interaction'); //Fish
     fish2 = this.physics.add.staticSprite(608,320,'interaction');
     fish3 = this.physics.add.staticSprite(608,320,'interaction');
+    fish4 = this.physics.add.staticSprite(640,320,'interaction');
 
     this.add.image(500, 300, 'floor');
     this.add.image(500, 300, 'wall');
@@ -117,16 +120,22 @@ function create ()
     keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
     keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
 
-    player = this.physics.add.sprite(450, 350, 'Chef1Atlas');
-    player2 = this.physics.add.sprite(450, 200, 'Chef2Atlas');
+    player = this.physics.add.sprite(450, 200, 'Chef1Atlas');
+    player2 = this.physics.add.sprite(450, 350, 'Chef2Atlas');
     player.body.setSize(20, 30);
+    player.body.slideFactor.set(0,0);
+    player2.body.slideFactor.set(0,0);
+    player.body.setOffset(5, 35); 
     player2.body.setSize(20, 30);
+    player2.body.setOffset(5, 35); 
+
+    this.physics.add.collider(player, player2);
+    this.physics.add.collider(player2, player);
     
     player.setCollideWorldBounds(true);
 
     // create the animations for the players
     createAnimations(this.anims);
-
 
 
     //Colliders for walls

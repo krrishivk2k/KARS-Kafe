@@ -14,6 +14,8 @@ window.createKitchenBoundaries = function createKitchenBoundaries(boundaries) {
     boundaries.create(576,256,'boundary').refreshBody();
     boundaries.create(576,224,'boundary').refreshBody();
     boundaries.create(576,192,'boundary').refreshBody();
+    boundaries.create(645,416,'boundary').refreshBody();
+    boundaries.create(549,448,'boundary').refreshBody();
     boundaries.create(576,160,'boundary').refreshBody();
     boundaries.create(576,128,'boundary').refreshBody();
     boundaries.create(576,96,'boundary').refreshBody();
