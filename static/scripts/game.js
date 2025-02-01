@@ -58,8 +58,7 @@ function create ()
     
 
     boundaries = this.physics.add.staticGroup();
-    interactionsK = this.physics.add.staticGroup();
-    interactionsP = this.physics.add.staticGroup();
+    
 
     this.add.image(500, 300, 'blackwall'); 
 
@@ -78,7 +77,9 @@ function create ()
 
     //Cutting board
     cutting1 = this.physics.add.sprite(416,160,'interaction');
+    cutting1.setImmovable(true);
     cutting2 = this.physics.add.sprite(448,160,'interaction');
+    cutting2.setImmovable(true);
 
     //Dish drop off
     finalDish1 = this.physics.add.staticSprite(416,256,'interaction');
@@ -90,11 +91,11 @@ function create ()
     createFoodPantryBoundaries(boundaries);
 
     //Pantry interactables
-    interactionsP.create(645,416,'interaction').refreshBody();
+    
     //interactionsP.create(645,448,'interaction').refreshBody();
     onionCrate = this.physics.add.staticSprite(613,448,'interaction'); //Onion
     tomatoCrate = this.physics.add.staticSprite(581,448,'interaction'); //Tomato
-    interactionsP.create(549,448,'interaction').refreshBody(); 
+    
     pickleCrate = this.physics.add.staticSprite(416,448,'interaction'); //Pickle
 
     meatStorage = this.physics.add.staticSprite(512,320,'interaction'); //Meat
