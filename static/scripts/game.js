@@ -104,12 +104,6 @@ function create ()
     });
 
     this.anims.create({
-        key: 'turn2',
-        frames: [ { key: 'Chef2Atlas', frame: 4 } ],
-        frameRate: 20
-    });
-
-    this.anims.create({
         key: 'left2',
         frames: this.anims.generateFrameNumbers('Chef2Atlas', { start: 5, end: 8 }),
         frameRate: 10,
@@ -160,6 +154,12 @@ function update ()
             player.anims.play('down1', true);
         }
     
+    {
+        player.setVelocityY(0);
+        player.setVelocityX(-75);
+        player.anims.play('left1', true);
+    }
+
 
     if(keyA.isDown){
         console.log('A');
