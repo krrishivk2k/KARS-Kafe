@@ -73,6 +73,7 @@ function preload ()
     //load order
     this.load.image('sushiPickleR', 'static/sushiPickleR.png');
     this.load.image('tomatoSoupR', 'static/tomatoSoupR.png');
+    this.load.image('beefonRice', 'static/beefonRice.png');
 
     //Player 2 Keys
     let keyA;
@@ -96,12 +97,13 @@ function create ()
     this.listOrders = [];
     this.orders = {
         1: 'sushiPickleR',
-        2: 'tomatoSoupR'
+        2: 'tomatoSoupR',
+        3: 'beefonRice'
     };
     
 
     for (let i = 0; i < 3; i++){
-        let order = Phaser.Math.Between(1,2);
+        let order = Phaser.Math.Between(1,3);
         this.listOrders.push(this.orders[order]);
     }
 
@@ -442,12 +444,26 @@ function create ()
         }
     });
 
-    this.add.image(800, 200*this.i +100, this.listOrders[this.i]).setScale(0.1);
+    if(this.listOrders[this.i] != 'beefonRice'){
+        this.add.image(800, 200*this.i +100, this.listOrders[this.i]).setScale(0.1);
+           this.i++;
+    }
+    else{
+        this.add.image(800, 200*this.i +100, this.listOrders[this.i]).setScale(0.25);
+        this.i++;
+    }
             this.i++;
 this.time.addEvent({
         delay: 10000,
         callback: () => {
-            this.add.image(800, 200*this.i +100, this.listOrders[this.i]).setScale(0.1);
+            if(this.listOrders[this.i] != 'beefonRice'){
+                this.add.image(800, 200*this.i +100, this.listOrders[this.i]).setScale(0.1);
+                   this.i++;
+            }
+            else{
+                this.add.image(800, 200*this.i +100, this.listOrders[this.i]).setScale(0.25);
+                this.i++;
+            }
             this.i++;
         },
         repeat: 3
@@ -462,8 +478,14 @@ this.time.addEvent({
                 }
                 else{
 			    if(this.i < 3){
-                    this.add.image(800, 200*this.i +100, this.listOrders[this.i]).setScale(0.1);
+                    if(this.listOrders[this.i] != 'beefonRice'){
+                        this.add.image(800, 200*this.i +100, this.listOrders[this.i]).setScale(0.1);
                    		this.i++;
+                    }
+                    else{
+                        this.add.image(800, 200*this.i +100, this.listOrders[this.i]).setScale(0.25);
+                        this.i++;
+                    }
 			    }
                 }
         },
