@@ -202,16 +202,19 @@ function create ()
     this.input.keyboard.on('keydown-E', () => {
         let distance = Phaser.Math.Distance.Between(player.x, player.y, onionCrate.x, onionCrate.y);
         if (distance < 100) {
-            this.interactwithCrate(player, onionCrate);
+            this.interactwithCrate(player, onionCrate, 'onion');
         }
         
     });
     
 }
-function interactwithCrate(player, crate){
+function interactwithCrate(player, crate, sprite){
     if(!player.hasItem){
         player.heldItem = 'onion';
-        this.add.image(player.x, player.y, 'onion');
+
+        playerContainer = this.add.container();
+    
+        player.itemSprite = this.add.image(player.x, player.y, sprite).setScale(1.5);
         player.hasItem = true;
     }
 }
@@ -306,5 +309,18 @@ function update ()
         else if (latestDirection2 == 'down') player2.anims.play('faceDown2', true);
     }
     
+
+    // update the position of the item sprite if the player has an item
+    if (player.hasItem) {
+        yOffset = 3;
+        xOffset = 0;
+        if (latestDirection1 == 'up') yOffset += -10;
+        else if (latestDirection1 == 'down') yOffset += 10;
+        else if (latestDirection1 == 'left') xOffset += -10;
+        else if (latestDirection1 == 'right') xOffset += 10;
+
+        player.itemSprite.x = player.x + xOffset;
+        player.itemSprite.y = player.y + yOffset;
+    }
         
 }
