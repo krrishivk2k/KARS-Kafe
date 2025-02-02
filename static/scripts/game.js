@@ -21,7 +21,8 @@ var config = {
         update: update,
         extend: {
             interactwithCrate: interactwithCrate,
-            interactWithKitchen: interactWithKitchen
+            interactWithKitchen: interactWithKitchen,
+            interactWithStove: interactWithStove
         }
     },
 };
@@ -57,6 +58,11 @@ function preload ()
     this.load.image('chopTomato', 'static/food/chopped_tomato.png');
     this.load.image('chopMeat', 'static/food/chopped_meat.png');
     this.load.image('chopFish', 'static/food/chopped_fish.png');
+
+    //Loading cooked food
+    this.load.image('cookMeat', 'static/food/cooked_meat.png');
+    this.load.image('cookFish', 'static/food/cooked_fish.png');
+
 
     //load order
     this.load.image('sushiPickleR', 'static/sushiPickleR.png');
@@ -163,27 +169,13 @@ function create ()
     riceIcon = this.physics.add.sprite(295, 64, 'floatIcon')
     cutIcon = this.physics.add.sprite(431, 135, 'floatIcon');
     cuttingAnimation = this.physics.add.sprite(431, 135, 'floatIcon');
+    stoveAnimation1 = this.physics.add.sprite(544, 32, 'floatIcon');
+    stoveAnimation2 = this.physics.add.sprite(512, 32, 'floatIcon');
+    stoveAnimation3 = this.physics.add.sprite(480, 32, 'floatIcon');
     cuttingAnimation.setDepth(3);
-
-    cuttingAnimation.anims.create({
-        key: 'cuttingAnimation',
-        frames: [
-            { key: 'floatIcon', frame: 8 },
-            { key: 'floatIcon', frame: 9 },
-            { key: 'floatIcon', frame: 10 },
-            { key: 'floatIcon', frame: 11 },
-            { key: 'floatIcon', frame: 12 },
-            { key: 'floatIcon', frame: 13 },
-            { key: 'floatIcon', frame: 14 },
-            { key: 'floatIcon', frame: 15 },
-            { key: 'floatIcon', frame: 24 },
-            { key: 'floatIcon', frame: 25 },
-            { key: 'floatIcon', frame: 26 },
-            { key: 'floatIcon', frame: 27 },
-            { key: 'floatIcon', frame: 28 }
-        ],
-        frameRate: 4
-    });
+    stoveAnimation1.setDepth(2);
+    stoveAnimation2.setDepth(2);
+    stoveAnimation3.setDepth(2);
 
     fishIcon.setDepth(1);
     meatIcon.setDepth(1);
@@ -422,7 +414,13 @@ function create ()
         },
         repeat: 5
     });
+
+    stoveAnimation1.visible = false;
+    stoveAnimation2.visible = false;
+    stoveAnimation3.visible = false;
+
 }
+
 function interactwithCrate(player, sprite){
     if(!player.hasItem){
         player.heldItem = sprite;
@@ -444,25 +442,43 @@ function interactWithKitchen(player, sprite) {
             player.itemSprite.destroy();
             player.itemSprite = null;
             player.itemSprite = this.add.image(player.x, player.y, 'chopOnion');
+            player.heldItem = 'chopOnion';
             player.hasItem = true;
         } else if (player.heldItem === 'tomato') {
             player.itemSprite.destroy();
             player.itemSprite = this.add.image(player.x, player.y, 'chopTomato').setScale(1.5);
+            player.heldItem = 'chopTomato';
             player.hasItem = true;
         } else if (player.heldItem === 'fish') {
             player.itemSprite.destroy();
             player.itemSprite = this.add.image(player.x, player.y, 'chopFish').setScale(1.5);
+            player.heldItem = 'chopFish';
             player.hasItem = true;
         } else if (player.heldItem === 'meat') {
             player.itemSprite.destroy();
             player.itemSprite = this.add.image(player.x, player.y, 'chopMeat').setScale(1.5);
+            player.heldItem = 'chopMeat';
             player.hasItem = true;
         }
 
-        timer = 500;
+        timer = 410;
     }
 }
 
+function interactWithStove(player, sprite) { 
+    if (player.hasItem && player.itemSprite != null) {
+
+        if (player.heldItem == 'chopFish') {
+            player.itemSprite = this.add.image(player.x, player.y, 'cookFish');
+            player.heldItem = 'cookFish';
+            player.hasItem = true;
+        } else if (player.heldItem === 'chopMeat') {
+            player.itemSprite = this.add.image(player.x, player.y, 'cookMeat').setScale(1.5);
+            player.heldItem = 'cookMeat';
+            player.hasItem = true;
+        } 
+    }
+}
 
 function update ()
 {
@@ -490,22 +506,41 @@ function update ()
         distanceCutting1 = Phaser.Math.Distance.Between(player.x, player.y, cutting1.x, cutting1.y);
         distanceCutting2 = Phaser.Math.Distance.Between(player.x, player.y, cutting2.x, cutting2.y);
         if ((distanceCutting1 < 50 && (latestDirection1 === 'up')) || (distanceCutting2 < 50 && (latestDirection1 === 'up'))) {
-            timer -= 2;
+            timer -= 3;
+            console.log(timer);
             player.isInteracting = true;
 
             cuttingAnimation.visible = true;
             cuttingAnimation.anims.play('cuttingAnimation', true);
         }
+
+        distanceCook1 = Phaser.Math.Distance.Between(player.x, player.y, stove1.x, stove1.y);
+        distanceCook2 = Phaser.Math.Distance.Between(player.x, player.y, stove2.x, stove2.y);
+        distanceCook3 = Phaser.Math.Distance.Between(player.x, player.y, stove3.x, stove3.y);
+        if (distanceCook1 < 50 && (latestDirection1 == 'up')) {
+            stoveAnimation1.visible = true;
+            stoveAnimation1.anims.play('stoveAnimation1', true);
+            this.physics.add.collider(player, stove1, this.interactWithStove(player, stove1));
+        } else if (distanceCook2 < 50 && (latestDirection1 == 'up')) {
+            stoveAnimation2.visible = true;
+            stoveAnimation2.anims.play('stoveAnimation2', true);
+            this.physics.add.collider(player, stove2, this.interactWithStove(player, stove2));
+        } else if (distanceCook3 < 50 && (latestDirection1 == 'up')) {
+            stoveAnimation3.visible = true;
+            stoveAnimation3.anims.play('stoveAnimation3', true);
+            this.physics.add.collider(player, stove3, this.interactWithStove(player, stove3));
+        }
+
         
     }
     else {
-        timer = 500;
+        timer = 410;
         cuttingAnimation.anims.stop();
         player.isInteracting = false;
     }
 
     keyObj.on('up', function(event) {
-        timer = 500;
+        timer = 410;
         cuttingAnimation.visible = false;
         player.isInteracting = false;
     });
