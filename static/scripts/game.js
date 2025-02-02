@@ -22,7 +22,9 @@ var config = {
         extend: {
             interactwithCrate: interactwithCrate,
             interactWithKitchen: interactWithKitchen,
-            interactWithStove: interactWithStove
+            interactWithStove: interactWithStove,
+            interactwithDish: interactwithDish,
+            interactionsDishes: interactionsDishes
         }
     },
 };
@@ -52,6 +54,10 @@ function preload ()
     this.load.image('pickle', 'static/food/pickle.png');
     this.load.image('meat', 'static/food/meat.png');
     this.load.image('fish', 'static/food/fish.png');
+    this.load.image('rice', 'static/food/rice.png');
+
+    //Loading Dish
+    this.load.image('dish', 'static/Dish.png');
 
     //Loading chopped food
     this.load.image('chopOnion', 'static/food/chopped_onion.png');
@@ -84,7 +90,7 @@ function preload ()
 
 function create ()
 {
-
+    this.dishes = 0;
     this.i = 0;
     this.orders = {};
     this.listOrders = [];
@@ -92,6 +98,7 @@ function create ()
         1: 'sushiPickleR',
         2: 'tomatoSoupR'
     };
+    
 
     for (let i = 0; i < 3; i++){
         let order = Phaser.Math.Between(1,2);
@@ -125,6 +132,7 @@ function create ()
     finalDish2 = this.physics.add.staticSprite(416,288,'interaction');
     finalDish3 = this.physics.add.staticSprite(416,320,'interaction'); 
 
+    dish1 = this.physics.add.sprite(574,64,'interaction');
     //Creating food pantry boundaries 
     //boundaries.create(512,320,'boundary').refreshBody();
     createFoodPantryBoundaries(boundaries);
@@ -298,6 +306,12 @@ function create ()
                 this.physics.add.collider(player, fish2, this.interactwithCrate(player, 'fish'));
                 this.physics.add.collider(player, fish3, this.interactwithCrate(player, 'fish'));
             }
+            //check if player is close enough to the rice cooker to interact with it
+            let distanceRice = Phaser.Math.Distance.Between(player.x, player.y, riceCooker.x, riceCooker.y);
+            if(distanceRice < 50 && latestDirection1 == 'left'){
+                this.physics.add.collider(player, riceCooker, this.interactwithCrate(player, 'rice'));
+            }
+            
             // check if the player is close enough to an item on the floor to pick it up
             for(let i = 0; i < floorItemArr.length; i++){
                 let distanceItem = Phaser.Math.Distance.Between(player.x, player.y, floorItemArr[i].x, floorItemArr[i].y);
@@ -307,7 +321,12 @@ function create ()
                 isRight = latestDirection1 == 'right' && player.x < floorItemArr[i].x;
                 if(distanceItem < 50 && (isDown || isUp || isLeft || isRight)){
                     player.heldItem = floorItemArr[i].texture.key;
-                    player.itemSprite = this.add.image(player.x, player.y, player.heldItem).setScale(1.5);
+                    if(player.heldItem!='dish'){
+                        player.itemSprite = this.add.image(player.x, player.y, player.heldItem).setScale(1.5);
+                    }
+                    else{
+                        player.itemSprite = this.add.image(player.x, player.y, player.heldItem).setScale(.25);
+                    }
                     player.itemSprite.setDepth(5);
                     player.hasItem = true;
                     floorItemArr[i].destroy();
@@ -326,7 +345,12 @@ function create ()
                 floorItem = this.physics.add.sprite(player.x - 12, player.y + 10, player.heldItem);
             else if(latestDirection1 == 'right') 
                 floorItem = this.physics.add.sprite(player.x + 16, player.y + 10, player.heldItem);
-            floorItem.setScale(1.5);
+            if(player.heldItem!='dish'){
+                floorItem.setScale(1.5);
+            }
+            else{
+                floorItem.setScale(0.25);
+            }
             floorItem.setDepth(2);
             floorItemArr.push(floorItem);
             player.itemSprite.destroy();
@@ -380,7 +404,12 @@ function create ()
                 isRight = latestDirection2 == 'right' && player2.x < floorItemArr[i].x;
                 if(distanceItem < 50 && (isDown || isUp || isLeft || isRight)){
                     player2.heldItem = floorItemArr[i].texture.key;
-                    player2.itemSprite = this.add.image(player2.x, player2.y, player2.heldItem).setScale(1.5);
+                    if(player2.heldItem!='dish'){
+                        player2.itemSprite = this.add.image(player2.x, player2.y, player2.heldItem).setScale(1.5);
+                    }
+                    else{
+                        player2.itemSprite = this.add.image(player2.x, player2.y, player2.heldItem).setScale(.25);
+                    }
                     player2.itemSprite.setDepth(5);
                     player2.hasItem = true;
                     floorItemArr[i].destroy();
@@ -398,7 +427,12 @@ function create ()
                 floorItem = this.physics.add.sprite(player2.x - 12, player2.y + 10, player2.heldItem);
             else if(latestDirection2 == 'right') 
                 floorItem = this.physics.add.sprite(player2.x + 16, player2.y + 10, player2.heldItem);
-            floorItem.setScale(1.5);
+            if(player.heldItem!='dish'){
+                floorItem.setScale(1.5);
+            }
+            else{
+                floorItem.setScale(0.25);
+            }
             floorItem.setDepth(2);
             floorItemArr.push(floorItem);
             player2.itemSprite.destroy();
@@ -406,21 +440,54 @@ function create ()
         }
     });
 
-    this.time.addEvent({
+    this.add.image(800, 200*this.i +100, this.listOrders[this.i]).setScale(0.1);
+            this.i++;
+this.time.addEvent({
         delay: 10000,
         callback: () => {
-            this.add.image(800, 300, this.listOrders[this.i]).setScale(0.1);
+            this.add.image(800, 200*this.i +100, this.listOrders[this.i]).setScale(0.1);
             this.i++;
         },
-        repeat: 5
+        repeat: 3
     });
+    setTimeout(() => {
+        this.time.addEvent({
+            delay: 1000,
+            callback: () => {
+                if(this.listOrders.length<3){
+                    let order = Phaser.Math.Between(1,2);
+                    this.listOrders.push(this.orders[order]);
+                }
+                else{
+			    if(this.i < 3){
+                    this.add.image(800, 200*this.i +100, this.listOrders[this.i]).setScale(0.1);
+                   		this.i++;
+			    }
+                }
+        },
+            repeat: 8
+    });
+}, 30000);
+    
+    
 
     stoveAnimation1.visible = false;
     stoveAnimation2.visible = false;
     stoveAnimation3.visible = false;
-
+    
 }
+function interactwithDish(player, sprite){
+    if(!player.hasItem && this.dishes<3){
+        player.heldItem = sprite;
+        this.dishes++;
+        playerContainer = this.add.container();
+        player.itemSprite = this.add.image(player.x, player.y, sprite).setScale(.25);
+        player.itemSprite.setDepth(5);
+        player.hasItem = true;
+        sprite.heldItem =[];
 
+    }
+}
 function interactwithCrate(player, sprite){
     if(!player.hasItem){
         player.heldItem = sprite;
@@ -431,6 +498,16 @@ function interactwithCrate(player, sprite){
         player.itemSprite.setDepth(5);
         player.hasItem = true;
     }
+}
+
+function interactionsDishes(player, sprite){
+        sprite.heldItem.append(player.heldItem);
+        sprite.itemSprite = this.add.image(sprite.x, sprite.y, player.heldItem).setScale(1.5);
+        console.long(sprite.heldItem);
+        player.itemSprite.destroy();
+        player.hasItem = false;
+    
+
 }
 
 function interactWithKitchen(player, sprite) { 
@@ -458,6 +535,11 @@ function interactWithKitchen(player, sprite) {
             player.itemSprite.destroy();
             player.itemSprite = this.add.image(player.x, player.y, 'chopMeat').setScale(1.5);
             player.heldItem = 'chopMeat';
+            player.hasItem = true;
+        }else if (player.heldItem === 'rice') {
+            player.itemSprite.destroy();
+            player.itemSprite = this.add.image(player.x, player.y, 'rice').setScale(1.5);
+            player.heldItem = 'rice';
             player.hasItem = true;
         }
 
@@ -530,9 +612,9 @@ function update ()
             stoveAnimation3.anims.play('stoveAnimation3', true);
             this.physics.add.collider(player, stove3, this.interactWithStove(player, stove3));
         }
-
-        
+ 
     }
+
     else {
         timer = 410;
         cuttingAnimation.anims.stop();
@@ -552,7 +634,14 @@ function update ()
         player.isInteracting = false;
         
     }
-
+    var keyObj2 = this.input.keyboard.addKey("M");
+    if(keyObj2.isDown){
+        distanceDish1 = Phaser.Math.Distance.Between(player.x, player.y, dish1.x, dish1.y);
+        if (distanceDish1 < 50 && (latestDirection1 == 'right')) {
+            this.physics.add.collider(player, dish1, this.interactwithDish(player, 'dish'));
+        }
+    }
+    
     cutIcon.anims.play('cutAni', true);
 
 
