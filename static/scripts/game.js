@@ -20,7 +20,8 @@ var config = {
         create: create,
         update: update,
         extend: {
-            interactwithCrate: interactwithCrate
+            interactwithCrate: interactwithCrate,
+            interactWithKitchen: interactWithKitchen
         }
     },
 };
@@ -50,6 +51,12 @@ function preload ()
     this.load.image('pickle', 'static/food/pickle.png');
     this.load.image('meat', 'static/food/meat.png');
     this.load.image('fish', 'static/food/fish.png');
+
+    //Loading chopped food
+    this.load.image('chopOnion', 'static/food/chopped_onion.png');
+    this.load.image('chopTomato', 'static/food/chopped_tomato.png');
+    this.load.image('chopMeat', 'static/food/chopped_meat.png');
+    this.load.image('chopFish', 'static/food/chopped_fish.png');
 
     //Player 2 Keys
     let keyA;
@@ -137,6 +144,30 @@ function create ()
     pickleIcon = this.physics.add.sprite(416,435, 'floatIcon');
     riceIcon = this.physics.add.sprite(295, 64, 'floatIcon')
     cutIcon = this.physics.add.sprite(431, 135, 'floatIcon');
+    cuttingAnimation = this.physics.add.sprite(431, 135, 'floatIcon');
+    cuttingAnimation.setDepth(3);
+
+    cuttingAnimation.anims.create({
+        key: 'cuttingAnimation',
+        frames: [
+            { key: 'floatIcon', frame: 8 },
+            { key: 'floatIcon', frame: 9 },
+            { key: 'floatIcon', frame: 10 },
+            { key: 'floatIcon', frame: 11 },
+            { key: 'floatIcon', frame: 12 },
+            { key: 'floatIcon', frame: 13 },
+            { key: 'floatIcon', frame: 14 },
+            { key: 'floatIcon', frame: 15 },
+            { key: 'floatIcon', frame: 24 },
+            { key: 'floatIcon', frame: 25 },
+            { key: 'floatIcon', frame: 26 },
+            { key: 'floatIcon', frame: 27 },
+            { key: 'floatIcon', frame: 28 }
+        ],
+        frameRate: 5,
+        hideOnComplete: true
+    });
+
     fishIcon.setDepth(1);
     meatIcon.setDepth(1);
     onionIcon.setDepth(1);
@@ -343,6 +374,30 @@ function interactwithCrate(player, sprite){
     }
 }
 
+function interactWithKitchen(player, sprite) { 
+    if (player.hasItem && player.itemSprite != null) {
+        sprite.heldItem = player.heldItem;
+        sprite.hasItem = true;
+
+        if (player.heldItem == 'onion') {
+            player.itemSprite.destroy();
+            player.itemSprite = null;
+            player.itemSprite = this.add.image(player.x, player.y, 'chopOnion');
+            player.hasItem = true;
+        } else if (player.heldItem === 'tomato') {
+            player.itemSprite = this.add.image(player.x, player.y, 'chopTomato').setScale(1.5);
+            player.hasItem = true;
+        } else if (player.heldItem === 'fish') {
+            player.itemSprite = this.add.image(player.x, player.y, 'chopFish').setScale(1.5);
+            player.hasItem = true;
+        } else if (player.heldItem === 'meat') {
+            player.itemSprite = this.add.image(player.x, player.y, 'chopMeat').setScale(1.5);
+            player.hasItem = true;
+        }
+    }
+}
+
+
 function update ()
 {
     // player1 movement
@@ -355,6 +410,27 @@ function update ()
     pickleIcon.anims.play('pickleAni', true);
     riceIcon.anims.play('riceAni', true);
     cutIcon.anims.play('cutAni', true);
+
+    var keyObj = this.input.keyboard.addKey("N");
+
+    if (this.input.keyboard.checkDown(keyObj, 100)) {
+        if(cursorKeys.left.isDown) latestDirection1 = 'left';
+        else if(cursorKeys.right.isDown) latestDirection1 = 'right';
+        else if(cursorKeys.up.isDown) latestDirection1 = 'up';
+        else if(cursorKeys.down.isDown) latestDirection1 = 'down';
+
+        // check if the player is close enough to the cutting board to interact with it
+        distanceCutting1 = Phaser.Math.Distance.Between(player.x, player.y, cutting1.x, cutting1.y);
+        distanceCutting2 = Phaser.Math.Distance.Between(player.x, player.y, cutting2.x, cutting2.y);
+        if ((distanceCutting1 < 50 && (latestDirection1 == 'up')) || (distanceCutting2 < 50 && (latestDirection1 == 'up'))) {
+            
+            cuttingAnimation.anims.play('cuttingAnimation', true);
+            console.log('nigger');
+            this.physics.add.collider(player, cutting1,  this.interactWithKitchen(player, cutting1));
+        } 
+    }
+    cutIcon.anims.play('cutAni', true);
+
 
     if (cursorKeys.left.isDown) {
         player.setVelocityX(-75);

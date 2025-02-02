@@ -165,4 +165,24 @@ window.createAnimations = function createAnimations(anims) {
         frames: anims.generateFrameNumbers('floatIcon', { start: 0, end: 7}),
         frameRate: 5,
     });
+    // anims.create({
+    //     key: 'cuttingAnimation',
+    //     frames: [
+    //         { key: 'floatIcon', frame: 8 },
+    //         { key: 'floatIcon', frame: 9 },
+    //         { key: 'floatIcon', frame: 10 },
+    //         { key: 'floatIcon', frame: 11 },
+    //         { key: 'floatIcon', frame: 12 },
+    //         { key: 'floatIcon', frame: 13 },
+    //         { key: 'floatIcon', frame: 14 },
+    //         { key: 'floatIcon', frame: 15 },
+    //         { key: 'floatIcon', frame: 24 },
+    //         { key: 'floatIcon', frame: 25 },
+    //         { key: 'floatIcon', frame: 26 },
+    //         { key: 'floatIcon', frame: 27 },
+    //         { key: 'floatIcon', frame: 28 }
+    //     ],
+    //     frameRate: 5,
+    //     //hideOnComplete: true
+    // });
 }
