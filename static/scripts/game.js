@@ -58,6 +58,10 @@ function preload ()
     this.load.image('chopMeat', 'static/food/chopped_meat.png');
     this.load.image('chopFish', 'static/food/chopped_fish.png');
 
+    //load order
+    this.load.image('sushiPickleR', 'static/sushiPickleR.png');
+    this.load.image('tomatoSoupR', 'static/tomatoSoupR.png');
+
     //Player 2 Keys
     let keyA;
     let keyD;
@@ -74,6 +78,20 @@ function preload ()
 
 function create ()
 {
+
+    this.i = 0;
+   this.orders = {};
+   this.listOrders = [];
+    this.orders = {
+        1: 'sushiPickleR',
+        2: 'tomatoSoupR'
+    };
+
+    for (let i = 0; i < 3; i++){
+        let order = Phaser.Math.Between(1,2);
+        this.listOrders.push(this.orders[order]);
+    }
+
     boundaries = this.physics.add.staticGroup();   
 
     this.add.image(500, 300, 'blackwall'); 
@@ -246,11 +264,10 @@ function create ()
     this.physics.add.collider(player, pickleCrate);
     this.physics.add.collider(player2, pickleCrate);
     
-    // these two variables are used to keep track of the latest direction the players moved in (for animations / interactions)
+   // these two variables are used to keep track of the latest direction the players moved in (for animations / interactions)
     latestDirection1 = 'down';
     latestDirection2 = 'down';
     var cursorKeys = this.input.keyboard.createCursorKeys();
-    var floorItemArr = [];
     // player 1 interaction
     this.input.keyboard.on('keydown-M', () => {
         var floorItem;
@@ -289,22 +306,6 @@ function create ()
                 this.physics.add.collider(player, fish2, this.interactwithCrate(player, 'fish'));
                 this.physics.add.collider(player, fish3, this.interactwithCrate(player, 'fish'));
             }
-            // check if the player is close enough to an item on the floor to pick it up
-            for(let i = 0; i < floorItemArr.length; i++){
-                let distanceItem = Phaser.Math.Distance.Between(player.x, player.y, floorItemArr[i].x, floorItemArr[i].y);
-                isDown = latestDirection1 == 'down' && player.y < floorItemArr[i].y;
-                isUp = latestDirection1 == 'up' && player.y > floorItemArr[i].y;
-                isLeft = latestDirection1 == 'left' && player.x > floorItemArr[i].x;
-                isRight = latestDirection1 == 'right' && player.x < floorItemArr[i].x;
-                if(distanceItem < 50 && (isDown || isUp || isLeft || isRight)){
-                    player.heldItem = floorItemArr[i].texture.key;
-                    player.itemSprite = this.add.image(player.x, player.y, player.heldItem).setScale(1.5);
-                    player.itemSprite.setDepth(5);
-                    player.hasItem = true;
-                    floorItemArr[i].destroy();
-                    floorItemArr.splice(i, 1);
-                }
-            }
         }
         // if player is holding an item drop it
         else if(player.hasItem) {
@@ -319,7 +320,6 @@ function create ()
                 floorItem = this.physics.add.sprite(player.x + 16, player.y + 10, player.heldItem);
             floorItem.setScale(1.5);
             floorItem.setDepth(2);
-            floorItemArr.push(floorItem);
             player.itemSprite.destroy();
             player.hasItem = false;
         }
@@ -362,22 +362,6 @@ function create ()
                 this.physics.add.collider(player2, fish2, this.interactwithCrate(player2, 'fish'));
                 this.physics.add.collider(player2, fish3, this.interactwithCrate(player2, 'fish'));
             }
-            // check if the player is close enough to an item on the floor to pick it up
-            for(let i = 0; i < floorItemArr.length; i++){
-                let distanceItem = Phaser.Math.Distance.Between(player2.x, player2.y, floorItemArr[i].x, floorItemArr[i].y);
-                isDown = latestDirection2 == 'down' && player2.y < floorItemArr[i].y;
-                isUp = latestDirection2 == 'up' && player2.y > floorItemArr[i].y;
-                isLeft = latestDirection2 == 'left' && player2.x > floorItemArr[i].x;
-                isRight = latestDirection2 == 'right' && player2.x < floorItemArr[i].x;
-                if(distanceItem < 50 && (isDown || isUp || isLeft || isRight)){
-                    player2.heldItem = floorItemArr[i].texture.key;
-                    player2.itemSprite = this.add.image(player2.x, player2.y, player2.heldItem).setScale(1.5);
-                    player2.itemSprite.setDepth(5);
-                    player2.hasItem = true;
-                    floorItemArr[i].destroy();
-                    floorItemArr.splice(i, 1);
-                }
-            }
         }
         // if player is holding an item drop it
         else if(player2.hasItem) {
@@ -391,10 +375,18 @@ function create ()
                 floorItem = this.physics.add.sprite(player2.x + 16, player2.y + 10, player2.heldItem);
             floorItem.setScale(1.5);
             floorItem.setDepth(2);
-            floorItemArr.push(floorItem);
             player2.itemSprite.destroy();
             player2.hasItem = false;
         }
+        
+    });
+    this.time.addEvent({
+        delay: 10000,
+        callback: () => {
+            this.add.image(800, 300, this.listOrders[this.i]).setScale(0.1);
+            this.i++;
+        },
+        repeat: 5
     });
 }
 function interactwithCrate(player, sprite){
