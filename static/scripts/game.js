@@ -182,8 +182,7 @@ function create ()
             { key: 'floatIcon', frame: 27 },
             { key: 'floatIcon', frame: 28 }
         ],
-        frameRate: 5,
-        hideOnComplete: true
+        frameRate: 4
     });
 
     fishIcon.setDepth(1);
@@ -419,7 +418,6 @@ function create ()
         delay: 10000,
         callback: () => {
             this.add.image(800, 300, this.listOrders[this.i]).setScale(0.1);
-            console.log("Order: ");
             this.i++;
         },
         repeat: 5
@@ -448,17 +446,20 @@ function interactWithKitchen(player, sprite) {
             player.itemSprite = this.add.image(player.x, player.y, 'chopOnion');
             player.hasItem = true;
         } else if (player.heldItem === 'tomato') {
+            player.itemSprite.destroy();
             player.itemSprite = this.add.image(player.x, player.y, 'chopTomato').setScale(1.5);
             player.hasItem = true;
         } else if (player.heldItem === 'fish') {
+            player.itemSprite.destroy();
             player.itemSprite = this.add.image(player.x, player.y, 'chopFish').setScale(1.5);
             player.hasItem = true;
         } else if (player.heldItem === 'meat') {
+            player.itemSprite.destroy();
             player.itemSprite = this.add.image(player.x, player.y, 'chopMeat').setScale(1.5);
             player.hasItem = true;
         }
 
-        
+        timer = 500;
     }
 }
 
@@ -478,7 +479,8 @@ function update ()
 
     var keyObj = this.input.keyboard.addKey("N");
 
-    if (this.input.keyboard.checkDown(keyObj, 100)) {
+    if (keyObj.isDown) {
+
         if(cursorKeys.left.isDown) latestDirection1 = 'left';
         else if(cursorKeys.right.isDown) latestDirection1 = 'right';
         else if(cursorKeys.up.isDown) latestDirection1 = 'up';
@@ -487,43 +489,69 @@ function update ()
         // check if the player is close enough to the cutting board to interact with it
         distanceCutting1 = Phaser.Math.Distance.Between(player.x, player.y, cutting1.x, cutting1.y);
         distanceCutting2 = Phaser.Math.Distance.Between(player.x, player.y, cutting2.x, cutting2.y);
-        if ((distanceCutting1 < 50 && (latestDirection1 == 'up')) || (distanceCutting2 < 50 && (latestDirection1 == 'up'))) {
-            
+        if ((distanceCutting1 < 50 && (latestDirection1 === 'up')) || (distanceCutting2 < 50 && (latestDirection1 === 'up'))) {
+            timer -= 2;
+            player.isInteracting = true;
+
+            cuttingAnimation.visible = true;
             cuttingAnimation.anims.play('cuttingAnimation', true);
-            console.log('nigger');
-            this.physics.add.collider(player, cutting1,  this.interactWithKitchen(player, cutting1));
-        } 
+        }
+        
     }
+    else {
+        timer = 500;
+        cuttingAnimation.anims.stop();
+        player.isInteracting = false;
+    }
+
+    keyObj.on('up', function(event) {
+        timer = 500;
+        cuttingAnimation.visible = false;
+        player.isInteracting = false;
+    });
+
+    if (timer <= 0) {
+        console.log("done");
+        cuttingAnimation.visible = true;
+        this.physics.add.collider(player, cutting1,  this.interactWithKitchen(player, cutting1));
+        player.isInteracting = false;
+        
+    }
+
     cutIcon.anims.play('cutAni', true);
 
 
-    if (cursorKeys.left.isDown) {
+    if (cursorKeys.left.isDown && !player.isInteracting) {
         player.setVelocityX(-75);
         player.setVelocityY(0);
         player.anims.play('left1', true);
 
         latestDirection1 = 'left';
     }
-    else if (cursorKeys.right.isDown) {
+    else if (cursorKeys.right.isDown && !player.isInteracting) {
         player.setVelocityX(75);
         player.setVelocityY(0);
         player.anims.play('right1', true);
 
         latestDirection1 = 'right';
     }
-    else if (cursorKeys.up.isDown) {
+    else if (cursorKeys.up.isDown && !player.isInteracting) {
         player.setVelocityY(-75);
         player.setVelocityX(0);
         player.anims.play('up1', true);
 
         latestDirection1 = 'up';
     }
-    else if (cursorKeys.down.isDown) {
+    else if (cursorKeys.down.isDown && !player.isInteracting) {
         player.setVelocityY(75);
         player.setVelocityX(0);
         player.anims.play('down1', true);
 
         latestDirection1 = 'down';
+    }
+    else if (player.isInteracting) {
+        player.setVelocityX(0);
+        player.setVelocityY(0);
     }
     else {
         player.setVelocityX(0);
@@ -575,7 +603,7 @@ function update ()
     }
     
     // update the position of the item sprite if the player has an item
-    if (player.hasItem) {
+    if (player.hasItem && !player.isInteracting) {
         yOffset = 10;
         xOffset = 0;
         if (latestDirection1 == 'up') yOffset += -170000;
