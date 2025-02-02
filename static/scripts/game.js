@@ -43,8 +43,8 @@ function preload ()
     this.load.image('boundary', 'static/map/tile.png');
     this.load.image('interaction', 'static/map/interaction.png');
     this.load.tilemapTiledJSON('wallCollider', 'static/map/wallscollide.JSON');
-    this.load.spritesheet('Chef1Atlas', 'static/characters/Chef1Atlas.png',{ frameWidth: 34, frameHeight: 66 });
-    this.load.spritesheet('Chef2Atlas', 'static/characters/Chef2Atlas.png',{ frameWidth: 34, frameHeight: 68 });
+    this.load.spritesheet('Chef1Atlas', 'static/characters/Chef1Atlas.png',{ frameWidth: 34.02, frameHeight: 66 });
+    this.load.spritesheet('Chef2Atlas', 'static/characters/Chef2Atlas.png',{ frameWidth: 34.02, frameHeight: 68 });
     this.load.spritesheet('floatIcon', 'static/float_icons.png',{ frameWidth: 34, frameHeight: 34 });
     this.load.image('on_top', 'static/map/on_top.png');
 
@@ -73,6 +73,7 @@ function preload ()
     //load order
     this.load.image('sushiPickleR', 'static/sushiPickleR.png');
     this.load.image('tomatoSoupR', 'static/tomatoSoupR.png');
+    this.load.image('beefonRice', 'static/beefonRice.png');
 
     //Player 2 Keys
     let keyA;
@@ -96,12 +97,13 @@ function create ()
     this.listOrders = [];
     this.orders = {
         1: 'sushiPickleR',
-        2: 'tomatoSoupR'
+        2: 'tomatoSoupR',
+        3: 'beefonRice'
     };
     
 
     for (let i = 0; i < 3; i++){
-        let order = Phaser.Math.Between(1,2);
+        let order = Phaser.Math.Between(1,3);
         this.listOrders.push(this.orders[order]);
     }
 
@@ -440,12 +442,25 @@ function create ()
         }
     });
 
-    this.add.image(800, 200*this.i +100, this.listOrders[this.i]).setScale(0.1);
+    if(this.listOrders[this.i] != 'beefonRice'){
+        this.add.image(800, 200*this.i +100, this.listOrders[this.i]).setScale(0.1);
+           this.i++;
+    }
+    else if(this.listOrders[this.i] == 'beefonRice'){
+        this.add.image(800, 200*this.i +100, this.listOrders[this.i]).setScale(.25);
+    }
             this.i++;
 this.time.addEvent({
         delay: 10000,
         callback: () => {
-            this.add.image(800, 200*this.i +100, this.listOrders[this.i]).setScale(0.1);
+
+            if(this.listOrders[this.i] != 'beefonRice'){
+                        this.add.image(800, 200*this.i +100, this.listOrders[this.i]).setScale(0.1);
+                   		this.i++;
+                    }
+                    else if(this.listOrders[this.i] == 'beefonRice'){
+                        this.add.image(800, 200*this.i +100, this.listOrders[this.i]).setScale(.25);
+                    }
             this.i++;
         },
         repeat: 3
@@ -460,8 +475,14 @@ this.time.addEvent({
                 }
                 else{
 			    if(this.i < 3){
-                    this.add.image(800, 200*this.i +100, this.listOrders[this.i]).setScale(0.1);
+                    if(this.listOrders[this.i] != 'beeonRice'){
+                        this.add.image(800, 200*this.i +100, this.listOrders[this.i]).setScale(0.1);
                    		this.i++;
+                    }
+                    else if(this.listOrders[this.i] == 'beefonRice'){
+                        this.add.image(800, 200*this.i +100, this.listOrders[this.i]).setScale(1.1);
+                    }
+                    
 			    }
                 }
         },
