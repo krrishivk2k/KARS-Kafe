@@ -200,17 +200,31 @@ function create ()
     latestDirection1 = 'down';
     latestDirection2 = 'down';
     this.input.keyboard.on('keydown-E', () => {
-        let distance = Phaser.Math.Distance.Between(player.x, player.y, onionCrate.x, onionCrate.y);
-        if (distance < 100) {
-            this.interactwithCrate(player, onionCrate, 'onion');
+        if(cursorKeys.left.isDown) latestDirection1 = 'left';
+        else if(cursorKeys.right.isDown) latestDirection1 = 'right';
+        else if(cursorKeys.up.isDown) latestDirection1 = 'up';
+        else if(cursorKeys.down.isDown) latestDirection1 = 'down';
+        // check if the player is close enough to the onion crate to interact with it
+        let distanceOnion = Phaser.Math.Distance.Between(player.x, player.y, onionCrate.x, onionCrate.y);
+        if(distanceOnion < 50 && latestDirection1 == 'down'){
+            this.physics.add.collider(player, onionCrate, this.interactwithCrate(player, 'onion'));
         }
-        
+        // check if the player is close enough to the tomato crate to interact with it
+        let distanceTomato = Phaser.Math.Distance.Between(player.x, player.y, tomatoCrate.x, tomatoCrate.y);
+        if(distanceTomato < 50 && latestDirection1 == 'down'){
+            this.physics.add.collider(player, tomatoCrate, this.interactwithCrate(player, 'tomato'));
+        }
+        // check if the player is close enough to the pickle crate to interact with it
+        let distancePickle = Phaser.Math.Distance.Between(player.x, player.y, pickleCrate.x, pickleCrate.y);
+        if(distancePickle < 50 && (latestDirection1 == 'down' || latestDirection1 == 'left')){
+            this.physics.add.collider(player, pickleCrate, this.interactwithCrate(player, 'pickle'));
+        }
     });
     
 }
-function interactwithCrate(player, crate, sprite){
+function interactwithCrate(player, sprite){
     if(!player.hasItem){
-        player.heldItem = 'onion';
+        player.heldItem = sprite;
 
         playerContainer = this.add.container();
     
