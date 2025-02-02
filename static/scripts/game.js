@@ -43,8 +43,8 @@ function preload ()
     this.load.image('boundary', 'static/map/tile.png');
     this.load.image('interaction', 'static/map/interaction.png');
     this.load.tilemapTiledJSON('wallCollider', 'static/map/wallscollide.JSON');
-    this.load.spritesheet('Chef1Atlas', 'static/characters/Chef1Atlas.png',{ frameWidth: 34, frameHeight: 66 });
-    this.load.spritesheet('Chef2Atlas', 'static/characters/Chef2Atlas.png',{ frameWidth: 34, frameHeight: 68 });
+    this.load.spritesheet('Chef1Atlas', 'static/characters/Chef1Atlas.png',{ frameWidth: 34.03, frameHeight: 66 });
+    this.load.spritesheet('Chef2Atlas', 'static/characters/Chef2Atlas.png',{ frameWidth: 34.03, frameHeight: 68 });
     this.load.spritesheet('floatIcon', 'static/float_icons.png',{ frameWidth: 34, frameHeight: 34 });
     this.load.image('on_top', 'static/map/on_top.png');
 
@@ -177,10 +177,12 @@ function create ()
     riceIcon = this.physics.add.sprite(295, 64, 'floatIcon')
     cutIcon = this.physics.add.sprite(431, 135, 'floatIcon');
     cuttingAnimation = this.physics.add.sprite(431, 135, 'floatIcon');
+    cuttingAnimation2 = this.physics.add.sprite(431, 135, 'floatIcon');
     stoveAnimation1 = this.physics.add.sprite(544, 32, 'floatIcon');
     stoveAnimation2 = this.physics.add.sprite(512, 32, 'floatIcon');
     stoveAnimation3 = this.physics.add.sprite(480, 32, 'floatIcon');
     cuttingAnimation.setDepth(3);
+    cuttingAnimation2.setDepth(3);
     stoveAnimation1.setDepth(2);
     stoveAnimation2.setDepth(2);
     stoveAnimation3.setDepth(2);
@@ -544,6 +546,7 @@ function interactWithKitchen(player, sprite) {
         }
 
         timer = 410;
+        timer2 = 410;
     }
 }
 
@@ -576,6 +579,7 @@ function update ()
     cutIcon.anims.play('cutAni', true);
 
     var keyObj = this.input.keyboard.addKey("N");
+    var keyObjP2 = this.input.keyboard.addKey("R");
 
     if (keyObj.isDown) {
 
@@ -614,7 +618,6 @@ function update ()
         }
  
     }
-
     else {
         timer = 410;
         cuttingAnimation.anims.stop();
@@ -639,6 +642,68 @@ function update ()
         distanceDish1 = Phaser.Math.Distance.Between(player.x, player.y, dish1.x, dish1.y);
         if (distanceDish1 < 50 && (latestDirection1 == 'right')) {
             this.physics.add.collider(player, dish1, this.interactwithDish(player, 'dish'));
+        }
+    }
+
+    if (keyObjP2.isDown) {
+
+        if(keyA.isDown) latestDirection2 = 'left';
+        else if(keyD.isDown) latestDirection2 = 'right';
+        else if(keyW.isDown) latestDirection2 = 'up';
+        else if(keyS.isDown) latestDirection2 = 'down';
+
+        // check if the player is close enough to the cutting board to interact with it
+        distanceCutting1 = Phaser.Math.Distance.Between(player2.x, player2.y, cutting1.x, cutting1.y);
+        distanceCutting2 = Phaser.Math.Distance.Between(player2.x, player2.y, cutting2.x, cutting2.y);
+        if ((distanceCutting1 < 50 && (latestDirection2 === 'up')) || (distanceCutting2 < 50 && (latestDirection2 === 'up'))) {
+            timer2 -= 3;
+            console.log(timer2);
+            player2.isInteracting = true;
+
+            cuttingAnimation2.visible = true;
+            cuttingAnimation2.anims.play('cuttingAnimation2', true);
+        }
+
+        distanceCook1 = Phaser.Math.Distance.Between(player2.x, player2.y, stove1.x, stove1.y);
+        distanceCook2 = Phaser.Math.Distance.Between(player2.x, player2.y, stove2.x, stove2.y);
+        distanceCook3 = Phaser.Math.Distance.Between(player2.x, player2.y, stove3.x, stove3.y);
+        if(distanceCook1 < 50 && (latestDirection2 == 'up')){
+            stoveAnimation1.visible = true;
+            stoveAnimation1.anims.play('stoveAnimation1', true);
+            this.physics.add.collider(player2, stove1, this.interactWithStove(player2, stove1));
+        } else if(distanceCook2 < 50 && (latestDirection2 == 'up')){
+            stoveAnimation2.visible = true;
+            stoveAnimation2.anims.play('stoveAnimation2', true);
+            this.physics.add.collider(player2, stove2, this.interactWithStove(player2, stove2));
+        } else if(distanceCook3 < 50 && (latestDirection2 == 'up')){
+            stoveAnimation3.visible = true;
+            stoveAnimation3.anims.play('stoveAnimation3', true);
+            this.physics.add.collider(player2, stove3, this.interactWithStove(player2, stove3));
+        }
+
+    }
+    else {
+        timer2 = 410;
+        cuttingAnimation2.anims.stop();
+        player2.isInteracting = false;
+    }
+
+    keyObjP2.on('up', function(event) {
+        timer2 = 410;
+        cuttingAnimation2.visible = false;
+        player2.isInteracting = false;
+    });
+    if (timer2 <= 0) {
+        console.log("done");
+        cuttingAnimation2.visible = true;
+        this.physics.add.collider(player2, cutting1,  this.interactWithKitchen(player2, cutting1));
+        player2.isInteracting = false;
+    }
+    var keyObjP22 = this.input.keyboard.addKey("E");
+    if(keyObjP22.isDown){
+        distanceDish1 = Phaser.Math.Distance.Between(player2.x, player2.y, dish1.x, dish1.y);
+        if (distanceDish1 < 50 && (latestDirection2 == 'right')) {
+            this.physics.add.collider(player2, dish1, this.interactwithDish(player2, 'dish'));
         }
     }
     
@@ -716,6 +781,10 @@ function update ()
         player2.anims.play('down2', true);
 
         latestDirection2 = 'down';
+    }
+    else if (player2.isInteracting) {
+        player2.setVelocityX(0);
+        player2.setVelocityY(0);
     }
     else {
         player2.setVelocityX(0);
