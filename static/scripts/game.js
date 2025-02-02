@@ -478,7 +478,7 @@ this.time.addEvent({
 }
 function interactwithDish(player, sprite){
     if(!player.hasItem && this.dishes<3){
-        player.heldItem = sprite+str(this.dishes);
+        player.heldItem = sprite;
         this.dishes++;
         playerContainer = this.add.container();
         player.itemSprite = this.add.image(player.x, player.y, sprite).setScale(.25);
