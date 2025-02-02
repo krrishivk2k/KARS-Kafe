@@ -219,8 +219,9 @@ function create ()
     latestDirection1 = 'down';
     latestDirection2 = 'down';
     var cursorKeys = this.input.keyboard.createCursorKeys();
-    var floorItem;
-    this.input.keyboard.on('keydown-E', () => {
+    // player 1 interaction
+    this.input.keyboard.on('keydown-M', () => {
+        var floorItem;
         if(cursorKeys.left.isDown) latestDirection1 = 'left';
         else if(cursorKeys.right.isDown) latestDirection1 = 'right';
         else if(cursorKeys.up.isDown) latestDirection1 = 'up';
@@ -274,7 +275,61 @@ function create ()
             player.hasItem = false;
         }
     });
-    
+    // player 2 interaction
+    this.input.keyboard.on('keydown-E', () => {
+        var floorItem;
+        if(keyA.isDown) latestDirection2 = 'left';
+        else if(keyD.isDown) latestDirection2 = 'right';
+        else if(keyW.isDown) latestDirection2 = 'up';
+        else if(keyS.isDown) latestDirection2 = 'down';
+        // check if the player is close enough to the onion crate to interact with it
+        if(!player2.hasItem){
+            let distanceOnion = Phaser.Math.Distance.Between(player2.x, player2.y, onionCrate.x, onionCrate.y);
+            if(distanceOnion < 50 && latestDirection2 == 'down'){
+                this.physics.add.collider(player2, onionCrate, this.interactwithCrate(player2, 'onion'));
+            }
+            // check if the player is close enough to the tomato crate to interact with it
+            let distanceTomato = Phaser.Math.Distance.Between(player2.x, player2.y, tomatoCrate.x, tomatoCrate.y);
+            if(distanceTomato < 50 && latestDirection2 == 'down'){
+                this.physics.add.collider(player2, tomatoCrate, this.interactwithCrate(player2, 'tomato'));
+            }
+            // check if the player is close enough to the pickle crate to interact with it
+            let distancePickle = Phaser.Math.Distance.Between(player2.x, player2.y, pickleCrate.x, pickleCrate.y);
+            if((distancePickle < 50 && latestDirection2 == 'down' && player2.y < pickleCrate.y - 34) || 
+            (distancePickle < 50 && latestDirection2 == 'left' && player2.x > pickleCrate.x)){
+                this.physics.add.collider(player2, pickleCrate, this.interactwithCrate(player2, 'pickle'));
+            }
+            // check if the player is close enough to the meat storage to interact with it
+            let distanceMeat = Phaser.Math.Distance.Between(player2.x, player2.y, meatStorage.x, meatStorage.y);
+            if(distanceMeat < 50 && latestDirection2 == 'up'){
+                this.physics.add.collider(player2, meatStorage, this.interactwithCrate(player2, 'meat'));
+            }
+            // check if the player is close enough to the fish storage to interact with it
+            let distanceFish1 = Phaser.Math.Distance.Between(player2.x, player2.y, fish1.x, fish1.y);
+            let distanceFish2 = Phaser.Math.Distance.Between(player2.x, player2.y, fish2.x, fish2.y);
+            let distanceFish3 = Phaser.Math.Distance.Between(player2.x, player2.y, fish3.x, fish3.y);
+            if((distanceFish1 < 50 || distanceFish2 < 50 || distanceFish3 < 50) && latestDirection2 == 'up'){
+                this.physics.add.collider(player2, fish1, this.interactwithCrate(player2, 'fish'));
+                this.physics.add.collider(player2, fish2, this.interactwithCrate(player2, 'fish'));
+                this.physics.add.collider(player2, fish3, this.interactwithCrate(player2, 'fish'));
+            }
+        }
+        // if player is holding an item drop it
+        else if(player2.hasItem) {
+            if(latestDirection2 == 'up') 
+                floorItem = this.physics.add.sprite(player2.x, player2.y, player2.heldItem);
+            else if(latestDirection2 == 'down') 
+                floorItem = this.physics.add.sprite(player2.x, player2.y + 30, player2.heldItem);
+            else if(latestDirection2 == 'left') 
+                floorItem = this.physics.add.sprite(player2.x - 12, player2.y + 10, player2.heldItem);
+            else if(latestDirection2 == 'right') 
+                floorItem = this.physics.add.sprite(player2.x + 16, player2.y + 10, player2.heldItem);
+            floorItem.setScale(1.5);
+            floorItem.setDepth(2);
+            player2.itemSprite.destroy();
+            player2.hasItem = false;
+        }
+    });
 }
 function interactwithCrate(player, sprite){
     if(!player.hasItem){
@@ -389,6 +444,17 @@ function update ()
 
         player.itemSprite.x = player.x + xOffset;
         player.itemSprite.y = player.y + yOffset;
+    }
+    if (player2.hasItem) {
+        yOffset = 10;
+        xOffset = 0;
+        if (latestDirection2 == 'up') yOffset += -170000;
+        else if (latestDirection2 == 'down') yOffset += 10;
+        else if (latestDirection2 == 'left') xOffset += -12;
+        else if (latestDirection2 == 'right') xOffset += 16;
+
+        player2.itemSprite.x = player2.x + xOffset;
+        player2.itemSprite.y = player2.y + yOffset;
     }
         
 }
