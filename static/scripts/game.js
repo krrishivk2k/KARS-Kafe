@@ -2,8 +2,11 @@
 
 var config = {
     type: Phaser.AUTO,
-    width: 800,
+    width: 1000,
     height: 600,
+    scale: {
+        mode: Phaser.Scale.FIT,
+    },
     physics: {
         default: 'arcade',
         arcade:{
@@ -343,12 +346,12 @@ function update ()
     
     // update the position of the item sprite if the player has an item
     if (player.hasItem) {
-        yOffset = 3;
+        yOffset = 10;
         xOffset = 0;
-        if (latestDirection1 == 'up') yOffset += -10;
+        if (latestDirection1 == 'up') yOffset += -170000;
         else if (latestDirection1 == 'down') yOffset += 10;
-        else if (latestDirection1 == 'left') xOffset += -10;
-        else if (latestDirection1 == 'right') xOffset += 10;
+        else if (latestDirection1 == 'left') xOffset += -12;
+        else if (latestDirection1 == 'right') xOffset += 16;
 
         player.itemSprite.x = player.x + xOffset;
         player.itemSprite.y = player.y + yOffset;
