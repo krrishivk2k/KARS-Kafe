@@ -452,7 +452,6 @@ function create ()
         this.add.image(800, 200*this.i +100, this.listOrders[this.i]).setScale(0.25);
         this.i++;
     }
-            this.i++;
 this.time.addEvent({
         delay: 10000,
         callback: () => {
@@ -464,7 +463,6 @@ this.time.addEvent({
                 this.add.image(800, 200*this.i +100, this.listOrders[this.i]).setScale(0.25);
                 this.i++;
             }
-            this.i++;
         },
         repeat: 3
     });
