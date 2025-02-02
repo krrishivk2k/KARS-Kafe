@@ -80,8 +80,8 @@ function create ()
 {
 
     this.i = 0;
-   this.orders = {};
-   this.listOrders = [];
+    this.orders = {};
+    this.listOrders = [];
     this.orders = {
         1: 'sushiPickleR',
         2: 'tomatoSoupR'
@@ -265,155 +265,165 @@ function create ()
     this.physics.add.collider(player2, pickleCrate);
     
    // these two variables are used to keep track of the latest direction the players moved in (for animations / interactions)
-   latestDirection1 = 'down';
-   latestDirection2 = 'down';
-   var cursorKeys = this.input.keyboard.createCursorKeys();
-   var floorItemArr = [];
-   // player 1 interaction
-   this.input.keyboard.on('keydown-M', () => {
-       var floorItem;
-       if(cursorKeys.left.isDown) latestDirection1 = 'left';
-       else if(cursorKeys.right.isDown) latestDirection1 = 'right';
-       else if(cursorKeys.up.isDown) latestDirection1 = 'up';
-       else if(cursorKeys.down.isDown) latestDirection1 = 'down';
-       // check if the player is close enough to the onion crate to interact with it
-       if(!player.hasItem){
-           let distanceOnion = Phaser.Math.Distance.Between(player.x, player.y, onionCrate.x, onionCrate.y);
-           if(distanceOnion < 50 && latestDirection1 == 'down'){
-               this.physics.add.collider(player, onionCrate, this.interactwithCrate(player, 'onion'));
-           }
-           // check if the player is close enough to the tomato crate to interact with it
-           let distanceTomato = Phaser.Math.Distance.Between(player.x, player.y, tomatoCrate.x, tomatoCrate.y);
-           if(distanceTomato < 50 && latestDirection1 == 'down'){
-               this.physics.add.collider(player, tomatoCrate, this.interactwithCrate(player, 'tomato'));
-           }
-           // check if the player is close enough to the pickle crate to interact with it
-           let distancePickle = Phaser.Math.Distance.Between(player.x, player.y, pickleCrate.x, pickleCrate.y);
-           if((distancePickle < 50 && latestDirection1 == 'down' && player.y < pickleCrate.y - 34) || 
-           (distancePickle < 50 && latestDirection1 == 'left' && player.x > pickleCrate.x)){
-               this.physics.add.collider(player, pickleCrate, this.interactwithCrate(player, 'pickle'));
-           }
-           // check if the player is close enough to the meat storage to interact with it
-           let distanceMeat = Phaser.Math.Distance.Between(player.x, player.y, meatStorage.x, meatStorage.y);
-           if(distanceMeat < 50 && latestDirection1 == 'up'){
-               this.physics.add.collider(player, meatStorage, this.interactwithCrate(player, 'meat'));
-           }
-           // check if the player is close enough to the fish storage to interact with it
-           let distanceFish1 = Phaser.Math.Distance.Between(player.x, player.y, fish1.x, fish1.y);
-           let distanceFish2 = Phaser.Math.Distance.Between(player.x, player.y, fish2.x, fish2.y);
-           let distanceFish3 = Phaser.Math.Distance.Between(player.x, player.y, fish3.x, fish3.y);
-           if((distanceFish1 < 50 || distanceFish2 < 50 || distanceFish3 < 50) && latestDirection1 == 'up'){
-               this.physics.add.collider(player, fish1, this.interactwithCrate(player, 'fish'));
-               this.physics.add.collider(player, fish2, this.interactwithCrate(player, 'fish'));
-               this.physics.add.collider(player, fish3, this.interactwithCrate(player, 'fish'));
-           }
-           // check if the player is close enough to an item on the floor to pick it up
-           for(let i = 0; i < floorItemArr.length; i++){
-               let distanceItem = Phaser.Math.Distance.Between(player.x, player.y, floorItemArr[i].x, floorItemArr[i].y);
-               isDown = latestDirection1 == 'down' && player.y < floorItemArr[i].y;
-               isUp = latestDirection1 == 'up' && player.y > floorItemArr[i].y;
-               isLeft = latestDirection1 == 'left' && player.x > floorItemArr[i].x;
-               isRight = latestDirection1 == 'right' && player.x < floorItemArr[i].x;
-               if(distanceItem < 50 && (isDown || isUp || isLeft || isRight)){
-                   player.heldItem = floorItemArr[i].texture.key;
-                   player.itemSprite = this.add.image(player.x, player.y, player.heldItem).setScale(1.5);
-                   player.itemSprite.setDepth(5);
-                   player.hasItem = true;
-                   floorItemArr[i].destroy();
-                   floorItemArr.splice(i, 1);
-               }
-           }
-       }
-       // if player is holding an item drop it
-       else if(player.hasItem) {
-           //floorItem = this.physics.add.sprite(player.x, player.y, player.heldItem);
-           if(latestDirection1 == 'up') 
-               floorItem = this.physics.add.sprite(player.x, player.y, player.heldItem);
-           else if(latestDirection1 == 'down') 
-               floorItem = this.physics.add.sprite(player.x, player.y + 30, player.heldItem);
-           else if(latestDirection1 == 'left') 
-               floorItem = this.physics.add.sprite(player.x - 12, player.y + 10, player.heldItem);
-           else if(latestDirection1 == 'right') 
-               floorItem = this.physics.add.sprite(player.x + 16, player.y + 10, player.heldItem);
-           floorItem.setScale(1.5);
-           floorItem.setDepth(2);
-           floorItemArr.push(floorItem);
-           player.itemSprite.destroy();
-           player.hasItem = false;
-       }
-   });
-   // player 2 interaction
-   this.input.keyboard.on('keydown-E', () => {
-       var floorItem;
-       if(keyA.isDown) latestDirection2 = 'left';
-       else if(keyD.isDown) latestDirection2 = 'right';
-       else if(keyW.isDown) latestDirection2 = 'up';
-       else if(keyS.isDown) latestDirection2 = 'down';
-       // check if the player is close enough to the onion crate to interact with it
-       if(!player2.hasItem){
-           let distanceOnion = Phaser.Math.Distance.Between(player2.x, player2.y, onionCrate.x, onionCrate.y);
-           if(distanceOnion < 50 && latestDirection2 == 'down'){
-               this.physics.add.collider(player2, onionCrate, this.interactwithCrate(player2, 'onion'));
-           }
-           // check if the player is close enough to the tomato crate to interact with it
-           let distanceTomato = Phaser.Math.Distance.Between(player2.x, player2.y, tomatoCrate.x, tomatoCrate.y);
-           if(distanceTomato < 50 && latestDirection2 == 'down'){
-               this.physics.add.collider(player2, tomatoCrate, this.interactwithCrate(player2, 'tomato'));
-           }
-           // check if the player is close enough to the pickle crate to interact with it
-           let distancePickle = Phaser.Math.Distance.Between(player2.x, player2.y, pickleCrate.x, pickleCrate.y);
-           if((distancePickle < 50 && latestDirection2 == 'down' && player2.y < pickleCrate.y - 34) || 
-           (distancePickle < 50 && latestDirection2 == 'left' && player2.x > pickleCrate.x)){
-               this.physics.add.collider(player2, pickleCrate, this.interactwithCrate(player2, 'pickle'));
-           }
-           // check if the player is close enough to the meat storage to interact with it
-           let distanceMeat = Phaser.Math.Distance.Between(player2.x, player2.y, meatStorage.x, meatStorage.y);
-           if(distanceMeat < 50 && latestDirection2 == 'up'){
-               this.physics.add.collider(player2, meatStorage, this.interactwithCrate(player2, 'meat'));
-           }
-           // check if the player is close enough to the fish storage to interact with it
-           let distanceFish1 = Phaser.Math.Distance.Between(player2.x, player2.y, fish1.x, fish1.y);
-           let distanceFish2 = Phaser.Math.Distance.Between(player2.x, player2.y, fish2.x, fish2.y);
-           let distanceFish3 = Phaser.Math.Distance.Between(player2.x, player2.y, fish3.x, fish3.y);
-           if((distanceFish1 < 50 || distanceFish2 < 50 || distanceFish3 < 50) && latestDirection2 == 'up'){
-               this.physics.add.collider(player2, fish1, this.interactwithCrate(player2, 'fish'));
-               this.physics.add.collider(player2, fish2, this.interactwithCrate(player2, 'fish'));
-               this.physics.add.collider(player2, fish3, this.interactwithCrate(player2, 'fish'));
-           }
-           // check if the player is close enough to an item on the floor to pick it up
-           for(let i = 0; i < floorItemArr.length; i++){
-               let distanceItem = Phaser.Math.Distance.Between(player2.x, player2.y, floorItemArr[i].x, floorItemArr[i].y);
-               isDown = latestDirection2 == 'down' && player2.y < floorItemArr[i].y;
-               isUp = latestDirection2 == 'up' && player2.y > floorItemArr[i].y;
-               isLeft = latestDirection2 == 'left' && player2.x > floorItemArr[i].x;
-               isRight = latestDirection2 == 'right' && player2.x < floorItemArr[i].x;
-               if(distanceItem < 50 && (isDown || isUp || isLeft || isRight)){
-                   player2.heldItem = floorItemArr[i].texture.key;
-                   player2.itemSprite = this.add.image(player2.x, player2.y, player2.heldItem).setScale(1.5);
-                   player2.itemSprite.setDepth(5);
-                   player2.hasItem = true;
-                   floorItemArr[i].destroy();
-                   floorItemArr.splice(i, 1);
-               }
-           }
-       }
-       // if player is holding an item drop it
-       else if(player2.hasItem) {
-           if(latestDirection2 == 'up') 
-               floorItem = this.physics.add.sprite(player2.x, player2.y, player2.heldItem);
-           else if(latestDirection2 == 'down') 
-               floorItem = this.physics.add.sprite(player2.x, player2.y + 30, player2.heldItem);
-           else if(latestDirection2 == 'left') 
-               floorItem = this.physics.add.sprite(player2.x - 12, player2.y + 10, player2.heldItem);
-           else if(latestDirection2 == 'right') 
-               floorItem = this.physics.add.sprite(player2.x + 16, player2.y + 10, player2.heldItem);
-           floorItem.setScale(1.5);
-           floorItem.setDepth(2);
-           floorItemArr.push(floorItem);
-           player2.itemSprite.destroy();
-           player2.hasItem = false;
-       }
-   });
+    latestDirection1 = 'down';
+    latestDirection2 = 'down';
+    var cursorKeys = this.input.keyboard.createCursorKeys();
+    var floorItemArr = [];
+    // player 1 interaction
+    this.input.keyboard.on('keydown-M', () => {
+        var floorItem;
+        if(cursorKeys.left.isDown) latestDirection1 = 'left';
+        else if(cursorKeys.right.isDown) latestDirection1 = 'right';
+        else if(cursorKeys.up.isDown) latestDirection1 = 'up';
+        else if(cursorKeys.down.isDown) latestDirection1 = 'down';
+        // check if the player is close enough to the onion crate to interact with it
+        if(!player.hasItem){
+            let distanceOnion = Phaser.Math.Distance.Between(player.x, player.y, onionCrate.x, onionCrate.y);
+            if(distanceOnion < 50 && latestDirection1 == 'down'){
+                this.physics.add.collider(player, onionCrate, this.interactwithCrate(player, 'onion'));
+            }
+            // check if the player is close enough to the tomato crate to interact with it
+            let distanceTomato = Phaser.Math.Distance.Between(player.x, player.y, tomatoCrate.x, tomatoCrate.y);
+            if(distanceTomato < 50 && latestDirection1 == 'down'){
+                this.physics.add.collider(player, tomatoCrate, this.interactwithCrate(player, 'tomato'));
+            }
+            // check if the player is close enough to the pickle crate to interact with it
+            let distancePickle = Phaser.Math.Distance.Between(player.x, player.y, pickleCrate.x, pickleCrate.y);
+            if((distancePickle < 50 && latestDirection1 == 'down' && player.y < pickleCrate.y - 34) || 
+            (distancePickle < 50 && latestDirection1 == 'left' && player.x > pickleCrate.x)){
+                this.physics.add.collider(player, pickleCrate, this.interactwithCrate(player, 'pickle'));
+            }
+            // check if the player is close enough to the meat storage to interact with it
+            let distanceMeat = Phaser.Math.Distance.Between(player.x, player.y, meatStorage.x, meatStorage.y);
+            if(distanceMeat < 50 && latestDirection1 == 'up'){
+                this.physics.add.collider(player, meatStorage, this.interactwithCrate(player, 'meat'));
+            }
+            // check if the player is close enough to the fish storage to interact with it
+            let distanceFish1 = Phaser.Math.Distance.Between(player.x, player.y, fish1.x, fish1.y);
+            let distanceFish2 = Phaser.Math.Distance.Between(player.x, player.y, fish2.x, fish2.y);
+            let distanceFish3 = Phaser.Math.Distance.Between(player.x, player.y, fish3.x, fish3.y);
+            if((distanceFish1 < 50 || distanceFish2 < 50 || distanceFish3 < 50) && latestDirection1 == 'up'){
+                this.physics.add.collider(player, fish1, this.interactwithCrate(player, 'fish'));
+                this.physics.add.collider(player, fish2, this.interactwithCrate(player, 'fish'));
+                this.physics.add.collider(player, fish3, this.interactwithCrate(player, 'fish'));
+            }
+            // check if the player is close enough to an item on the floor to pick it up
+            for(let i = 0; i < floorItemArr.length; i++){
+                let distanceItem = Phaser.Math.Distance.Between(player.x, player.y, floorItemArr[i].x, floorItemArr[i].y);
+                isDown = latestDirection1 == 'down' && player.y < floorItemArr[i].y;
+                isUp = latestDirection1 == 'up' && player.y > floorItemArr[i].y;
+                isLeft = latestDirection1 == 'left' && player.x > floorItemArr[i].x;
+                isRight = latestDirection1 == 'right' && player.x < floorItemArr[i].x;
+                if(distanceItem < 50 && (isDown || isUp || isLeft || isRight)){
+                    player.heldItem = floorItemArr[i].texture.key;
+                    player.itemSprite = this.add.image(player.x, player.y, player.heldItem).setScale(1.5);
+                    player.itemSprite.setDepth(5);
+                    player.hasItem = true;
+                    floorItemArr[i].destroy();
+                    floorItemArr.splice(i, 1);
+                }
+            }
+        }
+        // if player is holding an item drop it
+        else if(player.hasItem) {
+            //floorItem = this.physics.add.sprite(player.x, player.y, player.heldItem);
+            if(latestDirection1 == 'up') 
+                floorItem = this.physics.add.sprite(player.x, player.y, player.heldItem);
+            else if(latestDirection1 == 'down') 
+                floorItem = this.physics.add.sprite(player.x, player.y + 30, player.heldItem);
+            else if(latestDirection1 == 'left') 
+                floorItem = this.physics.add.sprite(player.x - 12, player.y + 10, player.heldItem);
+            else if(latestDirection1 == 'right') 
+                floorItem = this.physics.add.sprite(player.x + 16, player.y + 10, player.heldItem);
+            floorItem.setScale(1.5);
+            floorItem.setDepth(2);
+            floorItemArr.push(floorItem);
+            player.itemSprite.destroy();
+            player.hasItem = false;
+        }
+    });
+    // player 2 interaction
+    this.input.keyboard.on('keydown-E', () => {
+        var floorItem;
+        if(keyA.isDown) latestDirection2 = 'left';
+        else if(keyD.isDown) latestDirection2 = 'right';
+        else if(keyW.isDown) latestDirection2 = 'up';
+        else if(keyS.isDown) latestDirection2 = 'down';
+        // check if the player is close enough to the onion crate to interact with it
+        if(!player2.hasItem){
+            let distanceOnion = Phaser.Math.Distance.Between(player2.x, player2.y, onionCrate.x, onionCrate.y);
+            if(distanceOnion < 50 && latestDirection2 == 'down'){
+                this.physics.add.collider(player2, onionCrate, this.interactwithCrate(player2, 'onion'));
+            }
+            // check if the player is close enough to the tomato crate to interact with it
+            let distanceTomato = Phaser.Math.Distance.Between(player2.x, player2.y, tomatoCrate.x, tomatoCrate.y);
+            if(distanceTomato < 50 && latestDirection2 == 'down'){
+                this.physics.add.collider(player2, tomatoCrate, this.interactwithCrate(player2, 'tomato'));
+            }
+            // check if the player is close enough to the pickle crate to interact with it
+            let distancePickle = Phaser.Math.Distance.Between(player2.x, player2.y, pickleCrate.x, pickleCrate.y);
+            if((distancePickle < 50 && latestDirection2 == 'down' && player2.y < pickleCrate.y - 34) || 
+            (distancePickle < 50 && latestDirection2 == 'left' && player2.x > pickleCrate.x)){
+                this.physics.add.collider(player2, pickleCrate, this.interactwithCrate(player2, 'pickle'));
+            }
+            // check if the player is close enough to the meat storage to interact with it
+            let distanceMeat = Phaser.Math.Distance.Between(player2.x, player2.y, meatStorage.x, meatStorage.y);
+            if(distanceMeat < 50 && latestDirection2 == 'up'){
+                this.physics.add.collider(player2, meatStorage, this.interactwithCrate(player2, 'meat'));
+            }
+            // check if the player is close enough to the fish storage to interact with it
+            let distanceFish1 = Phaser.Math.Distance.Between(player2.x, player2.y, fish1.x, fish1.y);
+            let distanceFish2 = Phaser.Math.Distance.Between(player2.x, player2.y, fish2.x, fish2.y);
+            let distanceFish3 = Phaser.Math.Distance.Between(player2.x, player2.y, fish3.x, fish3.y);
+            if((distanceFish1 < 50 || distanceFish2 < 50 || distanceFish3 < 50) && latestDirection2 == 'up'){
+                this.physics.add.collider(player2, fish1, this.interactwithCrate(player2, 'fish'));
+                this.physics.add.collider(player2, fish2, this.interactwithCrate(player2, 'fish'));
+                this.physics.add.collider(player2, fish3, this.interactwithCrate(player2, 'fish'));
+            }
+            // check if the player is close enough to an item on the floor to pick it up
+            for(let i = 0; i < floorItemArr.length; i++){
+                let distanceItem = Phaser.Math.Distance.Between(player2.x, player2.y, floorItemArr[i].x, floorItemArr[i].y);
+                isDown = latestDirection2 == 'down' && player2.y < floorItemArr[i].y;
+                isUp = latestDirection2 == 'up' && player2.y > floorItemArr[i].y;
+                isLeft = latestDirection2 == 'left' && player2.x > floorItemArr[i].x;
+                isRight = latestDirection2 == 'right' && player2.x < floorItemArr[i].x;
+                if(distanceItem < 50 && (isDown || isUp || isLeft || isRight)){
+                    player2.heldItem = floorItemArr[i].texture.key;
+                    player2.itemSprite = this.add.image(player2.x, player2.y, player2.heldItem).setScale(1.5);
+                    player2.itemSprite.setDepth(5);
+                    player2.hasItem = true;
+                    floorItemArr[i].destroy();
+                    floorItemArr.splice(i, 1);
+                }
+            }
+        }
+        // if player is holding an item drop it
+        else if(player2.hasItem) {
+            if(latestDirection2 == 'up') 
+                floorItem = this.physics.add.sprite(player2.x, player2.y, player2.heldItem);
+            else if(latestDirection2 == 'down') 
+                floorItem = this.physics.add.sprite(player2.x, player2.y + 30, player2.heldItem);
+            else if(latestDirection2 == 'left') 
+                floorItem = this.physics.add.sprite(player2.x - 12, player2.y + 10, player2.heldItem);
+            else if(latestDirection2 == 'right') 
+                floorItem = this.physics.add.sprite(player2.x + 16, player2.y + 10, player2.heldItem);
+            floorItem.setScale(1.5);
+            floorItem.setDepth(2);
+            floorItemArr.push(floorItem);
+            player2.itemSprite.destroy();
+            player2.hasItem = false;
+        }
+    });
+
+    this.time.addEvent({
+        delay: 10000,
+        callback: () => {
+            this.add.image(800, 300, this.listOrders[this.i]).setScale(0.1);
+            console.log("Order: ");
+            this.i++;
+        },
+        repeat: 5
+    });
 }
 function interactwithCrate(player, sprite){
     if(!player.hasItem){
@@ -447,6 +457,8 @@ function interactWithKitchen(player, sprite) {
             player.itemSprite = this.add.image(player.x, player.y, 'chopMeat').setScale(1.5);
             player.hasItem = true;
         }
+
+        
     }
 }
 
