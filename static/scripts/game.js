@@ -38,6 +38,7 @@ function preload ()
     this.load.tilemapTiledJSON('wallCollider', 'static/map/wallscollide.JSON');
     this.load.spritesheet('Chef1Atlas', 'static/characters/Chef1Atlas.png',{ frameWidth: 34, frameHeight: 66 });
     this.load.spritesheet('Chef2Atlas', 'static/characters/Chef2Atlas.png',{ frameWidth: 34, frameHeight: 68 });
+    this.load.spritesheet('floatIcon', 'static/float_icons.png',{ frameWidth: 34, frameHeight: 34 });
     this.load.image('on_top', 'static/map/on_top.png');
 
     //Loading the food
@@ -61,13 +62,9 @@ function preload ()
 
 function create ()
 {
-    
-
-    boundaries = this.physics.add.staticGroup();
-    
+    boundaries = this.physics.add.staticGroup();   
 
     this.add.image(500, 300, 'blackwall'); 
-
     
     //Creating Kitchen boundaries
     createKitchenBoundaries(boundaries);
@@ -121,6 +118,15 @@ function create ()
     keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
     keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
     keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+
+    //Icons:
+    fishIcon = this.physics.add.sprite(610, 298, 'floatIcon');
+    meatIcon = this.physics.add.sprite(520, 310, 'floatIcon');
+    onionIcon = this.physics.add.sprite(613,435, 'floatIcon');
+    tomatoIcon = this.physics.add.sprite(581,435, 'floatIcon');
+    pickleIcon = this.physics.add.sprite(416,435, 'floatIcon');
+    riceIcon = this.physics.add.sprite(295, 64, 'floatIcon')
+    cutIcon = this.physics.add.sprite(431, 135, 'floatIcon');
 
     player = this.physics.add.sprite(450, 200, 'Chef1Atlas');
     player2 = this.physics.add.sprite(450, 350, 'Chef2Atlas');
@@ -214,6 +220,14 @@ function update ()
 {
     // player1 movement
     var cursorKeys = this.input.keyboard.createCursorKeys();
+
+    fishIcon.anims.play('fishAni', true);
+    meatIcon.anims.play('meatAni', true);
+    onionIcon.anims.play('onionAni', true);
+    tomatoIcon.anims.play('tomatoAni', true);
+    pickleIcon.anims.play('pickleAni', true);
+    riceIcon.anims.play('riceAni', true);
+    cutIcon.anims.play('cutAni', true);
 
     if (cursorKeys.left.isDown) {
         player.setVelocityX(-75);

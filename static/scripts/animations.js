@@ -129,4 +129,40 @@ window.createAnimations = function createAnimations(anims) {
         frames: anims.generateFrameNumbers('Chef2Atlas', { start: 22, end: 26 }),
         frameRate: 5,
     });
+
+    anims.create({
+        key: 'fishAni',
+        frames: anims.generateFrameNumbers('floatIcon', { start: 40, end: 47}),
+        frameRate: 5,
+    });
+    anims.create({
+        key: 'meatAni',
+        frames: anims.generateFrameNumbers('floatIcon', { start: 48, end: 55}),
+        frameRate: 5,
+    });
+    anims.create({
+        key: 'onionAni',
+        frames: anims.generateFrameNumbers('floatIcon', { start: 56, end: 62}),
+        frameRate: 5,
+    });
+    anims.create({
+        key: 'pickleAni',
+        frames: anims.generateFrameNumbers('floatIcon', { start: 64, end: 70}),
+        frameRate: 5,
+    });
+    anims.create({
+        key: 'tomatoAni',
+        frames: anims.generateFrameNumbers('floatIcon', { start: 88, end: 95}),
+        frameRate: 5,
+    });
+    anims.create({
+        key: 'riceAni',
+        frames: anims.generateFrameNumbers('floatIcon', { start: 80, end: 87}),
+        frameRate: 5,
+    });
+    anims.create({
+        key: 'cutAni',
+        frames: anims.generateFrameNumbers('floatIcon', { start: 0, end: 7}),
+        frameRate: 5,
+    });
 }
